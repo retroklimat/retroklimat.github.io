@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retro_Klimat — Fotografia Analogowa</title>
+
+<!-- Elegancka, kontrastowa typografia: serif na nagłówki (klimat retro), sans na resztę -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     1. ZMIENNE GLOBALNE — Twoja paleta Retro_Klimat
+     ============================================================ */
+  :root{
+    --bg-dark:      #2b2b2b;   /* głęboka szarość — tło strony */
+    --bg-darker:    #1f1f1f;   /* jeszcze ciemniejszy odcień, do gradientów/cieni */
+    --gold:         #8c7b4c;   /* oliwkowo-złoty akcent */
+    --gold-light:   #b5a06a;   /* jaśniejszy wariant akcentu, do hoverów */
+    --cream:        #e8e3d8;   /* stonowana biel na tekst, "papier fotograficzny" */
+    --frame-border: #4a4a45;   /* kolor ramki "starej kliszy" */
+
+    /* Parametry karuzeli — zmień śmiało, JS je odczyta */
+    --card-w: 260px;
+    --card-h: 340px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--bg-dark);
+    color:var(--cream);
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+
+  h1, h2, .logo{
+    font-family:'Playfair Display', serif;
+  }
+
+  /* ============================================================
+     2. NAGŁÓWEK / HERO — wprowadzenie przed sceną 3D
+     ============================================================ */
+  header{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+    padding:0 20px;
+  }
+
+  .logo{
+    font-size:clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing:0.08em;
+    color:var(--cream);
+    text-transform:uppercase;
+  }
+  .logo span{ color:var(--gold); font-style:italic; }
+
+  header p{
+    margin-top:1.2rem;
+    letter-spacing:0.25em;
+    text-transform:uppercase;
+    font-size:0.85rem;
+    color:var(--gold-light);
+  }
+
+  .scroll-hint{
+    position:absolute;
+    bottom:40px;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    color:var(--gold);
+    text-transform:uppercase;
+    opacity:0.8;
+    animation:bounce 2.2s infinite;
+  }
+  @keyframes bounce{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(10px); }
+  }
+
+  /* ============================================================
+     3. SEKCJA Z KARUZELĄ 3D — serce projektu
+     ============================================================
+     .scroll-stage — element, który generuje wysokość scrolla.
+     Im wyższy, tym dłużej trwa animacja obrotu cylindra podczas
+     przewijania (patrz JS: ScrollTrigger.end).
+  */
+  .scroll-stage{
+    position:relative;
+    height:500vh; /* <-- DŁUGOŚĆ EFEKTU: zwiększ/zmniejsz aby animacja trwała dłużej/krócej */
+  }
+
+  /* Element "sticky" — przypina scenę 3D na środku ekranu,
+     podczas gdy .scroll-stage przewija się w tle. To on daje
+     wrażenie "zatrzymanego" momentu, w którym obraca się tylko klisza. */
+  .pin-wrapper{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  /* Scena 3D — kluczowa właściwość: perspective.
+     Mniejsza wartość = mocniejszy, bardziej "rybie oko" efekt 3D.
+     Większa wartość = płaski, subtelny efekt.
+     800-1200px daje naturalny wygląd dla karuzeli tej wielkości. */
+  .scene{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    perspective:1200px;
+  }
+
+  /* Cylinder — kontener 3D. transform-style:preserve-3d JEST
+     KRYTYCZNE — bez tego dzieci (.frame) będą spłaszczone
+     do 2D przez przeglądarkę. To właśnie ten element obraca
+     GSAP w JS poprzez rotateY(). */
+  .carousel{
+    position:relative;
+    width:var(--card-w);
+    height:var(--card-h);
+    transform-style:preserve-3d;
+    will-change:transform; /* podpowiedź dla przeglądarki — zarezerwuj warstwę GPU pod tę animację */
+    /* transformOrigin center center 0 ustawiane w JS/domyślnie —
+       oś obrotu przechodzi przez środek cylindra */
+  }
+
+  /* Pojedyncza "klatka filmowa" — każde zdjęcie.
+     Ustawiona absolutnie w środku .carousel, następnie
+     JS nadaje jej indywidualny transform (rotateY + translateZ),
+     który wypycha ją na obwód okręgu. */
+  .frame{
+    position:absolute;
+    top:0; left:0;
+    width:var(--card-w);
+    height:var(--card-h);
+    /* backface-visibility:hidden — opcjonalnie odkomentuj, jeśli
+       chcesz, aby zdjęcia "znikały", gdy są odwrócone tyłem do
+       kamery. Zostawione widoczne, bo w kliszy filmowej ładnie
+       wygląda też "prześwit" po drugiej stronie cylindra. */
+    /* backface-visibility:hidden; */
+
+    background:var(--bg-darker);
+    padding:10px 10px 34px 10px; /* dolny margines szerszy — jak w starej odbitce/polaroidzie */
+    border:1px solid var(--frame-border);
+    border-radius:2px;
+    box-shadow:
+      0 10px 25px rgba(0,0,0,0.55),
+      inset 0 0 0 1px rgba(140,123,76,0.15); /* delikatna, złota "ramka klisze" od wewnątrz */
+  }
+
+  .frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:grayscale(15%) sepia(12%) contrast(1.05); /* subtelny, retro ton zdjęć */
+    display:block;
+    cursor:pointer; /* sygnalizuje, że zdjęcie jest klikalne — otwiera lightbox */
+    transition:filter .3s ease;
+  }
+  .frame img:hover{
+    filter:grayscale(0%) sepia(0%) contrast(1.05); /* przy hover znika retro-filtr — podpowiedź interaktywności */
+  }
+
+  /* ============================================================
+     LIGHTBOX — pełnoekranowy podgląd zdjęcia po kliknięciu
+     ============================================================
+     Jeden, wspólny overlay na całą stronę (tworzony raz w JS),
+     który dynamicznie dostaje src klikniętego zdjęcia.
+     Domyślnie: niewidoczny i "przeźroczysty" na kliknięcia
+     (pointer-events:none), żeby nie blokował reszty strony,
+     dopóki nie dostanie klasy .active.
+  */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(15,15,15,0.94);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    opacity:0;
+    pointer-events:none; /* wyłączone kliknięcia, dopóki lightbox jest zamknięty */
+  }
+  .lightbox.active{
+    pointer-events:auto; /* włączamy interakcję dopiero gdy otwarty */
+  }
+  .lightbox img{
+    max-width:88vw;
+    max-height:85vh;
+    object-fit:contain;
+    box-shadow:0 25px 70px rgba(0,0,0,0.65);
+    border:1px solid var(--frame-border);
+  }
+  .lightbox-close{
+    position:absolute;
+    top:28px;
+    right:36px;
+    width:44px;
+    height:44px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--gold);
+    font-size:1.8rem;
+    font-family:'Jost', sans-serif;
+    cursor:pointer;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    transition:background .3s, color .3s;
+    z-index:2;
+  }
+  .lightbox-close:hover{
+    background:var(--gold);
+    color:var(--bg-dark);
+  }
+
+  /* Strzałki nawigacji — poprzednie/następne zdjęcie */
+  .lightbox-nav{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:52px;
+    height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--gold);
+    font-size:1.6rem;
+    cursor:pointer;
+    border:1px solid var(--gold);
+    border-radius:50%;
+    background:rgba(43,43,43,0.5);
+    transition:background .3s, color .3s;
+    z-index:2;
+    user-select:none;
+  }
+  .lightbox-nav:hover{
+    background:var(--gold);
+    color:var(--bg-dark);
+  }
+  .lightbox-prev{ left:24px; }
+  .lightbox-next{ right:24px; }
+
+  /* Numer zdjęcia w lightboxie — "Nr. 03 / 10" */
+  .lightbox-counter{
+    position:absolute;
+    bottom:28px;
+    left:50%;
+    transform:translateX(-50%);
+    color:var(--gold-light);
+    letter-spacing:0.2em;
+    font-size:0.8rem;
+    text-transform:uppercase;
+    z-index:2;
+  }
+
+  .frame .frame-number{
+    position:absolute;
+    bottom:10px;
+    left:14px;
+    font-size:0.7rem;
+    letter-spacing:0.15em;
+    color:var(--gold-light);
+    font-family:'Jost', sans-serif;
+  }
+
+  /* Delikatne, boczne "perforacje" kliszy filmowej — czysto
+     dekoracyjny detal wzmacniający motyw "Retro_Klimat" */
+  .frame::before,
+  .frame::after{
+    content:"";
+    position:absolute;
+    left:0; right:0;
+    height:10px;
+    background-image:radial-gradient(circle, var(--bg-dark) 3px, transparent 3.5px);
+    background-size:16px 10px;
+    background-repeat:repeat-x;
+    opacity:0.5;
+  }
+  .frame::before{ top:0; }
+  .frame::after{ bottom:24px; }
+
+  /* Napis stały na środku sceny, pod karuzelą — tytuł sekcji */
+  .stage-caption{
+    position:absolute;
+    bottom:8%;
+    text-align:center;
+    z-index:5;
+    pointer-events:none;
+  }
+  .stage-caption h2{
+    font-size:1.1rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+
+  /* ============================================================
+     4. STOPKA / OUTRO
+     ============================================================ */
+  footer{
+    min-height:60vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 20px;
+    border-top:1px solid var(--frame-border);
+  }
+  footer h2{
+    font-size:clamp(1.8rem, 4vw, 3rem);
+    margin-bottom:1rem;
+  }
+  footer p{
+    color:var(--gold-light);
+    letter-spacing:0.05em;
+    max-width:480px;
+    line-height:1.7;
+  }
+  footer .contact{
+    margin-top:2.5rem;
+    padding:14px 36px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    text-decoration:none;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    font-size:0.8rem;
+    transition:background .3s, color .3s;
+  }
+  footer .contact:hover{
+    background:var(--gold);
+    color:var(--bg-dark);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="logo">Retro<span>_</span>Klimat</h1>
+  <p>Fotografia analogowa &mdash; klatka po klatce</p>
+  <span class="scroll-hint">Przewiń w dół ↓</span>
+</header>
+
+<!-- ============================================================
+     SEKCJA GŁÓWNA: karuzela 3D
+     Zmień .scroll-stage height (w CSS) aby wydłużyć/skrócić efekt.
+     ============================================================ -->
+<section class="scroll-stage">
+  <div class="pin-wrapper">
+    <div class="scene">
+      <!--
+        Kontener cylindra. Zdjęcia (.frame) generowane są dynamicznie
+        w JS na podstawie tablicy `photos` — patrz <script> niżej.
+        Możesz też wkleić je ręcznie tutaj jako statyczne <div class="frame">,
+        jeśli wolisz pełną kontrolę nad markupem zamiast generowania z JS.
+      -->
+      <div class="carousel" id="carousel"></div>
+    </div>
+    <div class="stage-caption">
+      <h2>Kolekcja 2024</h2>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h2>Uchwycone w kadrze</h2>
+  <p>Każde zdjęcie to osobna historia, zatrzymana w czasie. Retro_Klimat to spojrzenie na świat przez pryzmat analogowej estetyki i cierpliwego rzemiosła.</p>
+  <a href="#" class="contact">Skontaktuj się</a>
+</footer>
+
+<!-- ============================================================
+     LIGHTBOX — pusty kontener, JS wypełnia go obrazkiem po kliknięciu
+     ============================================================ -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">&times;</span>
+  <span class="lightbox-nav lightbox-prev" id="lightboxPrev">&#8249;</span>
+  <img id="lightboxImg" src="" alt="Powiększone zdjęcie">
+  <span class="lightbox-nav lightbox-next" id="lightboxNext">&#8250;</span>
+  <span class="lightbox-counter" id="lightboxCounter"></span>
+</div>
+
+<!-- GSAP + ScrollTrigger z CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ============================================================
+     KONFIGURACJA — PODMIEŃ TUTAJ ŚCIEŻKI DO SWOICH ZDJĘĆ
+     ============================================================
+     Tablica może mieć dowolną długość (nie tylko 10) — cała
+     matematyka niżej przelicza się automatycznie względem
+     photos.length. Podmień URL-e na własne pliki, np. "img/01.jpg".
+  */
+  const photos = [
+
+    "webp/DSCF2996.webp",
+    "webp/DSCF3357.webp",
+    "webp/DSCF3564.webp",
+    "webp/DSCF3788.webp",
+    "webp/DSCF3808.webp",
+    "webp/DSCF3893.webp",
+    "webp/DSCF3933.webp",
+    "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80",
+    "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=600&q=80",
+    "https://images.unsplash.com/photo-1495805442109-bf1cf975750b?w=600&q=80",
+    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80",
+    "https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=600&q=80",
+    "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&q=80",
+    "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?w=600&q=80",
+    "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80",
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80",
+    "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=600&q=80",
+
+  ];
+
+  const carousel = document.getElementById('carousel');
+  const numImages = photos.length;
+
+  /* ============================================================
+     MATEMATYKA UKŁADANIA ZDJĘĆ W SPIRALĘ (helisę)
+     ============================================================
+
+     Rozszerzenie wcześniejszego układu kołowego. Zamiast płaskiego
+     okręgu (wszystkie zdjęcia na tej samej wysokości), dokładamy
+     trzeci wymiar ruchu — pionowe przesunięcie translateY — dzięki
+     czemu każde kolejne zdjęcie leży nieco niżej niż poprzednie.
+     Efekt: kształt sprężyny/rozwiniętej rolki kliszy zakręcającej w dół.
+
+     KROK 1 — kąt między kolejnymi zdjęciami:
+     Wcześniej: theta = 360° / numImages (jeden pełny obrót na całość).
+     Teraz chcemy STEROWAĆ liczbą pełnych obrotów całej spirali
+     (SPIRAL_TURNS), więc:
+
+         theta = (360° * SPIRAL_TURNS) / (numImages - 1)
+
+     Dzielimy przez (numImages - 1), a nie numImages, bo interesuje
+     nas kąt MIĘDZY zdjęciami na odcinku od pierwszego do ostatniego
+     (n punktów = n-1 odstępów).
+
+     KROK 2 — promień okręgu (translateZ) — wzór bez zmian:
+
+         R = (W / 2) / tan(theta / 2)
+
+     KROK 3 — pionowy krok między zdjęciami:
+     Całą wysokość spirali (SPIRAL_HEIGHT) rozkładamy równomiernie
+     na wszystkie odstępy między zdjęciami:
+
+         verticalStep = SPIRAL_HEIGHT / (numImages - 1)
+
+     KROK 4 — ustawienie każdej klatki:
+     Dla i-tego zdjęcia (i = 0, 1, 2, ... numImages-1):
+
+         kąt_i = i * theta
+         y_i   = i * verticalStep
+
+         transform: translateY(y_i) rotateY(kąt_i) translateZ(R)
+
+     Dlaczego translateY można swobodnie połączyć z rotateY/translateZ?
+     Obrót wokół osi Y (rotateY) w ogóle nie rusza współrzędnej Y
+     elementu — obraca tylko płaszczyznę X-Z. Dzięki temu pionowe
+     przesunięcie i poziomy obrót po prostu się sumują, bez wzajemnej
+     kolizji, dając czysty kształt helisy.
+  */
+
+  const SPIRAL_TURNS  = 2;     // ile pełnych obrotów wykonuje cała spirala — więcej = mocniej "skręcona" rolka
+  const SPIRAL_HEIGHT = 1800;  // całkowita wysokość spirali w px — dystans w pionie między 1. a ostatnim zdjęciem
+
+  const theta = (360 * SPIRAL_TURNS) / (numImages - 1); // kąt między kolejnymi zdjęciami (stopnie)
+  const verticalStep = SPIRAL_HEIGHT / (numImages - 1); // pionowy krok w dół między kolejnymi zdjęciami (px)
+
+  const cardWidth = parseInt(getComputedStyle(document.documentElement)
+                      .getPropertyValue('--card-w'));   // szerokość klatki z CSS (np. 260px)
+
+  // Wzór z KROKU 2 — promień cylindra w px.
+  // Zamieniamy theta na radiany, bo Math.tan() oczekuje radianów.
+  const radius = Math.round(
+    (cardWidth / 2) / Math.tan((theta * Math.PI / 180) / 2)
+  );
+
+  // Generujemy klatki i ustawiamy im transform zgodnie z KROKIEM 4.
+  // UWAGA: zdjęcie i=0 dostaje y=0, czyli siedzi dokładnie na środku
+  // ekranu NA STARCIE (zanim ScrollTrigger cokolwiek ruszy). Kolejne
+  // zdjęcia mają coraz większe y (czyli leżą niżej, poza kadrem) —
+  // scrollowanie i tak przesuwa cały .carousel w górę (patrz animacja
+  // niżej), więc to one po kolei "wjeżdżają" na środek w miarę scrolla.
+  //
+  // frameAngles / frameYs zapamiętują kąt_i oraz y_i każdego zdjęcia —
+  // lightbox użyje ich później, żeby wiedzieć, o ile obrócić i przesunąć
+  // .carousel, aby dane zdjęcie "wjechało" na środek ekranu w tle.
+  const frameAngles = [];
+  const frameYs = [];
+
+  photos.forEach((src, i) => {
+    const angle = i * theta;         // kąt_i
+    const y = i * verticalStep;      // y_i — zdjęcie 0 zaczyna na wysokości środka ekranu
+    frameAngles.push(angle);
+    frameYs.push(y);
+
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    frame.dataset.index = i; // pozwala lightboxowi rozpoznać, które zdjęcie zostało kliknięte
+    // Kolejność: translateY przesuwa zdjęcie wzdłuż osi spirali (w dół),
+    // rotateY + translateZ ustawiają je na obwodzie okręgu — jak wcześniej.
+    frame.style.transform = `translateY(${y}px) rotateY(${angle}deg) translateZ(${radius}px)`;
+
+    frame.innerHTML = `
+      <img src="${src}" alt="Retro_Klimat — fotografia ${i + 1}" loading="lazy">
+      <span class="frame-number">Nr. ${String(i + 1).padStart(2, '0')}</span>
+    `;
+
+    carousel.appendChild(frame);
+  });
+
+  /* ============================================================
+     ANIMACJA SCROLLTRIGGER — "rozwijanie" spirali podczas scrollowania
+     ============================================================
+     Animujemy CAŁY .carousel (a nie pojedyncze zdjęcia) dwoma
+     właściwościami naraz, w tym samym gsap.to():
+
+       1) rotateY — obrót spirali, pokazuje kolejne zdjęcia od frontu
+       2) y       — przesunięcie całej grupy w GÓRĘ o SPIRAL_HEIGHT,
+                     co wizualnie wygląda jak zjeżdżanie kamery w DÓŁ
+                     wzdłuż rolki kliszy (bo to spirala "wjeżdża"
+                     pod nieruchomą kamerę, a nie kamera pod spiralę)
+
+     Obie wartości są sprzężone z tym samym paskiem scrolla (scrub),
+     więc obrót i zjazd w dół zawsze poruszają się zsynchronizowanie —
+     stąd wrażenie spójnej, "rozwijanej" taśmy filmowej.
+  */
+  gsap.to("#carousel", {
+    rotateY: `-=${360 * SPIRAL_TURNS}`, // "-=" — obrót względny w przeciwną stronę (zmień z powrotem na "+=" jeśli wolisz kierunek pierwotny)
+    y: -SPIRAL_HEIGHT,                  // przesunięcie w górę o całą wysokość spirali — "zjazd" kamery w dół rolki
+    ease: "none", // brak easingu — ruch ma być liniowy, 1:1 ze scrollem (typowe dla scrub)
+    scrollTrigger: {
+      trigger: ".scroll-stage",   // element, którego wysokość napędza animację
+      start: "top top",           // animacja startuje, gdy góra .scroll-stage dotyka góry viewportu
+      end: "bottom bottom",       // kończy się, gdy dół .scroll-stage dotyka dołu viewportu
+      scrub: 1,                   // 1 = lekkie "wygładzenie" ruchu (opóźnienie 1s doganiania scrolla); ustaw `true` dla 1:1 bez wygładzenia
+      pin: ".pin-wrapper",        // przypina scenę na ekranie na czas trwania scrolla
+      pinSpacing: false,          // wysokość już zapewnia .scroll-stage, więc GSAP nie dubluje spacingu
+      // markers: true,            // odkomentuj podczas developmentu, by zobaczyć punkty start/end na ekranie
+    }
+  });
+
+  /* Delikatny fade-in nagłówka na starcie strony — czysto kosmetyczne */
+  gsap.from("header .logo, header p, header .scroll-hint", {
+    opacity: 0,
+    y: 30,
+    duration: 1.2,
+    stagger: 0.15,
+    ease: "power2.out"
+  });
+
+  /* ============================================================
+     LIGHTBOX — powiększanie zdjęcia po kliknięciu + nawigacja
+     ============================================================
+     Jeden wspólny #lightbox (patrz HTML), tylko podmieniamy mu
+     src na kliknięte zdjęcie. Dodatkowo: strzałki prev/next
+     przełączają zdjęcia bez zamykania widoku, a w tle — pod
+     lightboxem — .carousel płynnie doobraca się do pozycji tego
+     zdjęcia, więc "klisza" wygląda, jakby żywo podążała za tym,
+     co oglądasz.
+  */
+  const lightbox         = document.getElementById('lightbox');
+  const lightboxImg      = document.getElementById('lightboxImg');
+  const lightboxClose    = document.getElementById('lightboxClose');
+  const lightboxPrev     = document.getElementById('lightboxPrev');
+  const lightboxNext     = document.getElementById('lightboxNext');
+  const lightboxCounter  = document.getElementById('lightboxCounter');
+
+  let currentIndex = 0; // który indeks z tablicy photos jest aktualnie pokazany w lightboxie
+
+  /* Doprowadza .carousel do pozycji, w której zdjęcie o danym
+     indeksie stoi dokładnie na środku ekranu (od frontu).
+     To DOKŁADNIE ta sama logika transformu co przy generowaniu
+     klatek (translateY + rotateY), tylko zastosowana do CAŁEGO
+     kontenera w kierunku odwrotnym — "cofamy" o tyle, o ile dana
+     klatka była wysunięta względem środka .carousel. */
+  function syncBackgroundTo(index){
+    const targetY = -frameYs[index]; // przesuwamy carousel tak, by y_i danej klatki wypadło na 0
+
+    // Dla obrotu liczymy NAJKRÓTSZĄ drogę do celu, żeby carousel
+    // nie zakręcił się o kilka zbędnych pełnych obrotów, jeśli
+    // scroll wcześniej nakręcił dużą wartość rotateY (np. 1500°).
+    const currentRotation = gsap.getProperty(carousel, "rotateY");
+    const desiredMod = ((-frameAngles[index] % 360) + 360) % 360; // cel, znormalizowany do 0-360
+    const currentMod = ((currentRotation % 360) + 360) % 360;
+    let diff = desiredMod - currentMod;
+    if (diff > 180) diff -= 360;   // wybierz krótszą drogę (np. -20° zamiast +340°)
+    if (diff < -180) diff += 360;
+    const targetRotation = currentRotation + diff;
+
+    gsap.to(carousel, {
+      rotateY: targetRotation,
+      y: targetY,
+      duration: 0.7,
+      ease: "power2.inOut",
+      overwrite: "auto" // przerywa ewentualną animację scrolla, żeby się nie gryzły
+    });
+  }
+
+  function showImage(index){
+    currentIndex = index;
+    const alt = `Retro_Klimat — fotografia ${index + 1}`;
+
+    // Krótki crossfade zamiast twardej podmiany src — mniej "szarpane"
+    gsap.to(lightboxImg, {
+      opacity: 0,
+      duration: 0.15,
+      onComplete: () => {
+        lightboxImg.src = photos[index];
+        lightboxImg.alt = alt;
+        gsap.to(lightboxImg, { opacity: 1, duration: 0.25 });
+      }
+    });
+
+    lightboxCounter.textContent = `Nr. ${String(index + 1).padStart(2,'0')} / ${numImages}`;
+    syncBackgroundTo(index); // klisza w tle "podjeżdża" do tego zdjęcia
+  }
+
+  function openLightbox(index){
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden'; // blokujemy scroll strony (i tym samym scroll-driven animację)
+
+    lightboxImg.src = photos[index];
+    lightboxImg.alt = `Retro_Klimat — fotografia ${index + 1}`;
+    lightboxImg.style.opacity = 1;
+    lightboxCounter.textContent = `Nr. ${String(index + 1).padStart(2,'0')} / ${numImages}`;
+    currentIndex = index;
+
+    gsap.fromTo(lightbox,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.35, ease: "power2.out" }
+    );
+    gsap.fromTo(lightboxImg,
+      { scale: 0.85 },
+      { scale: 1, duration: 0.4, ease: "back.out(1.7)" }
+    );
+
+    syncBackgroundTo(index); // od razu ustawiamy tło pod klikniętym zdjęciem
+  }
+
+  function closeLightbox(){
+    gsap.to(lightbox, {
+      opacity: 0,
+      duration: 0.3,
+      ease: "power2.in",
+      onComplete: () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = ''; // odblokowujemy scroll — kolejny scroll zsynchronizuje tło z realną pozycją strony
+      }
+    });
+  }
+
+  function nextImage(){
+    showImage((currentIndex + 1) % numImages); // % zawija na początek po ostatnim zdjęciu
+  }
+  function prevImage(){
+    showImage((currentIndex - 1 + numImages) % numImages); // +numImages zapobiega ujemnemu indeksowi
+  }
+
+  // Event delegation — jeden listener na cały #carousel obsługuje
+  // kliknięcia we wszystkie zdjęcia, nawet te dodane dynamicznie wyżej.
+  carousel.addEventListener('click', (e) => {
+    const frame = e.target.closest('.frame');
+    if (frame) openLightbox(parseInt(frame.dataset.index, 10));
+  });
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxNext.addEventListener('click', nextImage);
+  lightboxPrev.addEventListener('click', prevImage);
+
+  // Klik na ciemne tło (poza zdjęciem i strzałkami) zamyka lightbox
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Nawigacja klawiaturą — strzałki i Escape
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') nextImage();
+    if (e.key === 'ArrowLeft') prevImage();
+  });
+</script>
+
+</body>
+</html>
