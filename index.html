@@ -404,33 +404,46 @@
   gsap.registerPlugin(ScrollTrigger);
 
   /* ============================================================
-     KONFIGURACJA — PODMIEŃ TUTAJ ŚCIEŻKI DO SWOICH ZDJĘĆ
+     WCZYTYWANIE ZDJĘĆ — automatycznie, z assets/images-data.json
      ============================================================
-     Tablica może mieć dowolną długość (nie tylko 10) — cała
-     matematyka niżej przelicza się automatycznie względem
-     photos.length. Podmień URL-e na własne pliki, np. "img/01.jpg".
+     Ten plik generuje convert.js (uruchamiany ręcznie: node convert.js
+     za każdym razem, gdy dodasz nowe zdjęcia do src_images/<kategoria>/).
+     Ma strukturę: [{ path: "assets/img/xxx.webp", category: "portret" }, ...]
+     Tutaj wyciągamy z niej same ścieżki — category zostaje zapisane
+     w frameCategories, gdyby kiedyś przydało się filtrowanie po kategorii.
+
+     FALLBACK: jeśli plik nie istnieje (np. jeszcze nie uruchomiłeś
+     convert.js ani razu), używamy krótkiej, zapasowej listy zdjęć
+     z Unsplash — żeby strona nie była całkiem pusta.
   */
-  const photos = [
+  async function loadPhotos(){
+    try {
+      const res = await fetch('assets/images-data.json');
+      if (!res.ok) throw new Error('assets/images-data.json not found');
+      const data = await res.json();
+      if (!Array.isArray(data) || data.length === 0) throw new Error('images-data.json is empty');
+      return {
+        photos: data.map(item => item.path),
+        categories: data.map(item => item.category)
+      };
+    } catch (err) {
+      console.warn('Nie udało się wczytać assets/images-data.json, używam listy zapasowej:', err.message);
+      const fallback = [
+        "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80",
+        "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=600&q=80",
+        "https://images.unsplash.com/photo-1495805442109-bf1cf975750b?w=600&q=80",
+        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80",
+        "https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=600&q=80",
+      ];
+      return { photos: fallback, categories: fallback.map(() => null) };
+    }
+  }
 
-    "webp/DSCF2996.webp",
-    "webp/DSCF3357.webp",
-    "webp/DSCF3564.webp",
-    "webp/DSCF3788.webp",
-    "webp/DSCF3808.webp",
-    "webp/DSCF3893.webp",
-    "webp/DSCF3933.webp",
-    "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80",
-    "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=600&q=80",
-    "https://images.unsplash.com/photo-1495805442109-bf1cf975750b?w=600&q=80",
-    "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80",
-    "https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=600&q=80",
-    "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&q=80",
-    "https://images.unsplash.com/photo-1508921912186-1d1a45ebb3c1?w=600&q=80",
-    "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80",
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80",
-    "https://images.unsplash.com/photo-1465101162946-4377e57745c3?w=600&q=80",
-
-  ];
+  /* Cała reszta logiki strony (spirala + lightbox) czeka teraz na
+     wczytanie zdjęć, więc siedzi w jednej, asynchronicznej funkcji
+     init() — uruchamianej na samym dole tego bloku <script>. */
+  async function init(){
+  const { photos, categories: photoCategories } = await loadPhotos();
 
   const carousel = document.getElementById('carousel');
   const numImages = photos.length;
@@ -518,6 +531,7 @@
     const frame = document.createElement('div');
     frame.className = 'frame';
     frame.dataset.index = i; // pozwala lightboxowi rozpoznać, które zdjęcie zostało kliknięte
+    frame.dataset.category = photoCategories[i] || ''; // kategoria z convert.js — przyda się np. do filtrowania portfolio
     // Kolejność: translateY przesuwa zdjęcie wzdłuż osi spirali (w dół),
     // rotateY + translateZ ustawiają je na obwodzie okręgu — jak wcześniej.
     frame.style.transform = `translateY(${y}px) rotateY(${angle}deg) translateZ(${radius}px)`;
@@ -701,6 +715,10 @@
     if (e.key === 'ArrowRight') nextImage();
     if (e.key === 'ArrowLeft') prevImage();
   });
+
+  } // koniec async function init()
+
+  init(); // odpalamy całość dopiero po wczytaniu listy zdjęć
 </script>
 
 </body>
