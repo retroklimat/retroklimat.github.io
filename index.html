@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/aperture-icon.png">
+
 <style>
   /* ============================================================
      1. ZMIENNE GLOBALNE — Twoja paleta Retro_Klimat
@@ -29,6 +32,10 @@
   * { margin:0; padding:0; box-sizing:border-box; }
 
   html{ scroll-behavior:smooth; }
+
+  /* Offset dla wszystkich sekcji z ID (cele linków kotwicowych),
+     żeby fixed .navbar nie zasłaniał górnej części sekcji po kliknięciu */
+  section[id]{ scroll-margin-top:90px; }
 
   body{
     background:var(--bg-dark);
@@ -348,11 +355,253 @@
     background:var(--gold);
     color:var(--bg-dark);
   }
+  /* ============================================================
+     NAVBAR — przyklejone menu na górze strony
+     ============================================================
+     position:fixed (nie sticky) — chcemy, żeby menu było widoczne
+     od razu na wierzchu hero, a nie dopiero po przescrollowaniu go.
+     backdrop-filter:blur daje efekt "mlecznej szyby" nad tłem pod spodem.
+  */
+  .navbar{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 5%;
+    background:rgba(43,43,43,0.55);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(140,123,76,0.2);
+  }
+  .navbar-logo img{
+    display:block;
+    height:50px;
+    width:auto;
+  }
+  .navbar-links{
+    display:flex;
+    gap:2.2rem;
+  }
+  .navbar-links a{
+    color:var(--cream);
+    text-decoration:none;
+    font-size:0.85rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    transition:color .3s;
+  }
+  .navbar-links a:hover{
+    color:var(--gold);
+  }
+
+  /* ============================================================
+     SEKCJA "O MNIE" — dwukolumnowy układ
+     ============================================================ */
+  .about-section{
+    max-width:1100px;
+    margin:0 auto;
+    padding:120px 5% 100px;
+    display:flex;
+    align-items:center;
+    gap:60px;
+  }
+  .about-text{ flex:1.3; }
+  .about-text h2{
+    font-size:clamp(1.8rem, 3vw, 2.6rem);
+    margin-bottom:1.2rem;
+    color:var(--cream);
+  }
+  .about-text h2 span{ color:var(--gold); font-style:italic; }
+  .about-text p{
+    color:var(--gold-light);
+    line-height:1.8;
+    font-size:0.98rem;
+  }
+  .about-image{
+    flex:1;
+    display:flex;
+    justify-content:center;
+  }
+  /* Logo wyeksponowane jako okrągły "medalion" — object-fit:cover
+     gwarantuje, że obraz wypełni okrąg bez zniekształceń proporcji */
+  .about-logo-circle{
+    width:clamp(200px, 24vw, 320px);
+    aspect-ratio:1/1;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--gold);
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+    padding:14px;
+    background:var(--bg-darker);
+  }
+
+  @media (max-width: 768px){
+    .about-section{
+      flex-direction:column;
+      text-align:center;
+      padding:100px 6% 70px;
+    }
+  }
+
+  /* ============================================================
+     SEKCJA "PORTFOLIO" — siatka zdjęć z filtrami
+     ============================================================ */
+  .portfolio-section{
+    max-width:1300px;
+    margin:0 auto;
+    padding:60px 5% 100px;
+    text-align:center;
+  }
+  .portfolio-section h2{
+    font-size:clamp(1.8rem, 3vw, 2.6rem);
+    margin-bottom:2.2rem;
+  }
+
+  .filter-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:2.8rem;
+  }
+  .filter-btn{
+    background:transparent;
+    border:1px solid var(--frame-border);
+    color:var(--gold-light);
+    padding:10px 24px;
+    font-family:'Jost', sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    cursor:pointer;
+    border-radius:2px;
+    transition:border-color .3s, color .3s, background .3s;
+  }
+  .filter-btn:hover{
+    border-color:var(--gold);
+    color:var(--gold);
+  }
+  .filter-btn.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--bg-dark);
+  }
+
+  /* Prosta responsywna siatka — auto-fill sam dobiera liczbę kolumn
+     zależnie od szerokości ekranu, bez media queries dla samej siatki */
+  .portfolio-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:16px;
+  }
+  .portfolio-item{
+    position:relative;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    border:1px solid var(--frame-border);
+    cursor:pointer;
+    background:var(--bg-darker);
+  }
+  .portfolio-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:grayscale(10%) sepia(8%) contrast(1.05);
+    transition:transform .5s ease, filter .5s ease;
+    display:block;
+  }
+  .portfolio-item:hover img{
+    transform:scale(1.08);
+    filter:grayscale(0%) sepia(0%) contrast(1.05);
+  }
+  /* Ukrywanie odfiltrowanych kafelków — display:none zamiast tylko
+     opacity, żeby nie zostawiały pustych "dziur" w siatce */
+  .portfolio-item.is-hidden{
+    display:none;
+  }
+
+  @media (max-width: 480px){
+    .portfolio-grid{
+      grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+      gap:8px;
+    }
+  }
+
+  /* ============================================================
+     SEKCJA "REZERWACJA"
+     ============================================================ */
+  .booking-section{
+    padding:40px 5% 120px;
+  }
+  .booking-box{
+    max-width:800px;
+    margin:0 auto;
+    text-align:center;
+    padding:50px 40px;
+    border:1px solid var(--frame-border);
+    background:var(--bg-darker);
+  }
+  .booking-box h2{
+    font-size:clamp(1.8rem, 3vw, 2.4rem);
+    margin-bottom:0.8rem;
+  }
+  .booking-box p{
+    color:var(--gold-light);
+    margin-bottom:2rem;
+  }
+
+  /* ============================================================
+     STOPKA — prosty pasek na samym dole
+     ============================================================ */
+  .site-footer{
+    padding:30px 5%;
+    border-top:1px solid var(--frame-border);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    text-align:center;
+  }
+  .site-footer p{
+    letter-spacing:0.2em;
+    font-size:0.8rem;
+    color:var(--gold-light);
+  }
+  .footer-icons{
+    display:flex;
+    gap:20px;
+  }
+  .footer-icons a{
+    display:flex;
+    color:var(--gold); /* SVG-y niżej używają fill/stroke="currentColor", więc dziedziczą ten kolor */
+    transition:opacity .3s;
+  }
+  .footer-icons a:hover{ opacity:0.7; }
+  .footer-icons svg{
+    width:22px;
+    height:22px;
+  }
 </style>
 </head>
 <body>
 
-<header>
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav class="navbar">
+  <a href="#top" class="navbar-logo">
+    <img src="assets/logoretroklimat.png" alt="Retro_Klimat">
+  </a>
+  <div class="navbar-links">
+    <a href="#o-mnie">O mnie</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#rezerwacja">Rezerwacja</a>
+  </div>
+</nav>
+
+<header id="top">
   <h1 class="logo">Retro<span>_</span>Klimat</h1>
   <p>Fotografia analogowa &mdash; klatka po klatce</p>
   <span class="scroll-hint">Przewiń w dół ↓</span>
@@ -382,8 +631,55 @@
 <footer>
   <h2>Uchwycone w kadrze</h2>
   <p>Każde zdjęcie to osobna historia, zatrzymana w czasie. Retro_Klimat to spojrzenie na świat przez pryzmat analogowej estetyki i cierpliwego rzemiosła.</p>
-  <a href="#" class="contact">Skontaktuj się</a>
+  <a href="#rezerwacja" class="contact">Umów sesję</a>
 </footer>
+
+<!-- ============================================================
+     SEKCJA "O MNIE"
+     ============================================================ -->
+<section id="o-mnie" class="about-section">
+  <div class="about-text">
+    <h2>O <span>mnie</span></h2>
+    <p>
+      Fotografię traktuję jak rzemiosło — cierpliwe, uważne, zbudowane
+      na świetle i chwili, która się nie powtórzy. Retro_Klimat to
+      analogowa estetyka przeniesiona w cyfrowy kadr: stonowane barwy,
+      ziarno filmu i historie zatrzymane na dłużej niż jedno spojrzenie.
+      Każda sesja to osobna opowieść — reportaż, portret czy klimat drogi —
+      dokumentowana z szacunkiem dla detalu i naturalnego charakteru chwili.
+    </p>
+  </div>
+  <div class="about-image">
+    <img src="assets/logoretroklimat.png" alt="Retro_Klimat — logo" class="about-logo-circle">
+  </div>
+</section>
+
+<!-- ============================================================
+     SEKCJA "PORTFOLIO" — siatka zdjęć z filtrami po kategorii
+     ============================================================ -->
+<section id="portfolio" class="portfolio-section">
+  <h2>Portfolio</h2>
+  <div class="filter-buttons" id="filterButtons">
+    <button class="filter-btn active" data-filter="all">Wszystkie</button>
+    <button class="filter-btn" data-filter="reportaz">Reportaż</button>
+    <button class="filter-btn" data-filter="portret">Portret</button>
+    <button class="filter-btn" data-filter="motoryzacja">Motoryzacja</button>
+  </div>
+  <!-- Kafelki generowane dynamicznie w script.js na podstawie
+       tych samych danych z assets/images-data.json, co klisza 3D -->
+  <div class="portfolio-grid" id="portfolioGrid"></div>
+</section>
+
+<!-- ============================================================
+     SEKCJA "REZERWACJA"
+     ============================================================ -->
+<section id="rezerwacja" class="booking-section">
+  <div class="booking-box">
+    <h2>Umów sesję</h2>
+    <p>Wybierz dogodny termin — potwierdzenie dostaniesz od razu na maila.</p>
+    <!-- TUTAJ WKLEJ KOD IFRAME ZENCAL -->
+  </div>
+</section>
 
 <!-- ============================================================
      LIGHTBOX — pusty kontener, JS wypełnia go obrazkiem po kliknięciu
@@ -395,6 +691,28 @@
   <span class="lightbox-nav lightbox-next" id="lightboxNext">&#8250;</span>
   <span class="lightbox-counter" id="lightboxCounter"></span>
 </div>
+
+<!-- ============================================================
+     STOPKA — prosty pasek z linkami
+     ============================================================ -->
+<footer class="site-footer">
+  <p>@RETROKLIMAT.FOTO</p>
+  <div class="footer-icons">
+    <a href="https://instagram.com/retroklimat.foto" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="2.5" y="2.5" width="19" height="19" rx="5"/>
+        <circle cx="12" cy="12" r="4.5"/>
+        <circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/>
+      </svg>
+    </a>
+    <a href="mailto:kontakt@retroklimat.foto" aria-label="E-mail">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>
+        <path d="M3.5 6 L12 13 L20.5 6"/>
+      </svg>
+    </a>
+  </div>
+</footer>
 
 <!-- GSAP + ScrollTrigger z CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -542,6 +860,56 @@
     `;
 
     carousel.appendChild(frame);
+  });
+
+  /* ============================================================
+     GALERIA "PORTFOLIO" — siatka zdjęć + filtrowanie po kategorii
+     ============================================================
+     Wykorzystuje TE SAME dane z assets/images-data.json co klisza 3D
+     (tablice photos / photoCategories) — nie pobieramy niczego drugi
+     raz. Klik na kafelek otwiera ten sam #lightbox co spirala,
+     bo indeks zdjęcia (i) jest wspólny dla obu widoków.
+  */
+  const portfolioGrid = document.getElementById('portfolioGrid');
+  const filterButtons = document.querySelectorAll('.filter-btn');
+
+  photos.forEach((src, i) => {
+    const category = photoCategories[i] || '';
+
+    const item = document.createElement('div');
+    item.className = 'portfolio-item';
+    item.dataset.index = i;          // do otwierania właściwego zdjęcia w lightboxie
+    item.dataset.category = category; // do filtrowania
+
+    item.innerHTML = `<img src="${src}" alt="Retro_Klimat — fotografia ${i + 1}" loading="lazy">`;
+
+    portfolioGrid.appendChild(item);
+  });
+
+  // Klik na dowolny kafelek galerii otwiera lightbox z tym samym
+  // indeksem — funkcje openLightbox/showImage/syncBackgroundTo
+  // są zdefiniowane niżej, ale w JS deklaracje function są "hoistowane",
+  // więc można się do nich odwołać już tutaj bez błędu.
+  portfolioGrid.addEventListener('click', (e) => {
+    const item = e.target.closest('.portfolio-item');
+    if (item) openLightbox(parseInt(item.dataset.index, 10));
+  });
+
+  // Filtrowanie: klik na przycisk pokazuje tylko kafelki z pasującą
+  // kategorią (albo wszystkie, gdy data-filter="all"), i podświetla
+  // aktywny przycisk klasą .active.
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+
+      filterButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.portfolio-item').forEach(item => {
+        const matches = (filter === 'all') || (item.dataset.category === filter);
+        item.classList.toggle('is-hidden', !matches);
+      });
+    });
   });
 
   /* ============================================================
