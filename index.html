@@ -79,6 +79,29 @@
     color:var(--gold-light);
   }
 
+  /* Duże logo w hero — wyeksponowane ponad tekstem */
+  .header-logo{
+    margin-bottom:1.8rem;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid var(--gold);
+    box-shadow:0 15px 40px rgba(0,0,0,0.6);
+    animation:fadeInDown .8s ease-out;
+  }
+
+  @keyframes fadeInDown{
+    from{
+      opacity:0;
+      transform:translateY(-30px);
+    }
+    to{
+      opacity:1;
+      transform:translateY(0);
+    }
+  }
+
   .scroll-hint{
     position:absolute;
     bottom:40px;
@@ -377,8 +400,10 @@
   }
   .navbar-logo img{
     display:block;
-    height:50px;
+    height:70px; /* zwiększone z 50px */
     width:auto;
+    border-radius:50%; /* okrągłe */
+    object-fit:cover; /* jeśli obraz nie będzie idealnym kwadratem */
   }
   .navbar-links{
     display:flex;
@@ -530,6 +555,106 @@
   }
 
   /* ============================================================
+     SEKCJA "CENNIK"
+     ============================================================ */
+  .pricing-section{
+    max-width:1100px;
+    margin:0 auto;
+    padding:60px 5% 100px;
+    text-align:center;
+  }
+  .pricing-section h2{
+    font-size:clamp(1.8rem, 3vw, 2.6rem);
+    margin-bottom:2.2rem;
+  }
+
+  .pricing-card{
+    max-width:420px;
+    margin:0 auto;
+    background:var(--bg-darker);
+    border:1px solid var(--frame-border);
+    padding:44px 36px;
+    text-align:center;
+    position:relative;
+  }
+  /* Delikatna złota linia u góry karty — spójna z estetyką "ramek klisze" */
+  .pricing-card::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:3px;
+    background:var(--gold);
+  }
+
+  .pricing-card-header h3{
+    font-family:'Jost', sans-serif;
+    font-weight:400;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    font-size:0.85rem;
+    color:var(--gold-light);
+    margin-bottom:0.8rem;
+  }
+  .pricing-amount{
+    font-family:'Playfair Display', serif;
+    font-size:3rem;
+    color:var(--cream);
+    margin-bottom:1.8rem;
+  }
+  .pricing-amount span{
+    font-size:1.4rem;
+    color:var(--gold);
+  }
+
+  .pricing-features{
+    list-style:none;
+    text-align:left;
+    margin-bottom:1.6rem;
+  }
+  .pricing-features li{
+    padding:10px 0;
+    border-bottom:1px solid var(--frame-border);
+    color:var(--cream);
+    font-size:0.92rem;
+    position:relative;
+    padding-left:26px;
+  }
+  /* Mała, złota "kropka-znacznik" zamiast domyślnego markera listy */
+  .pricing-features li::before{
+    content:"—";
+    position:absolute;
+    left:0;
+    color:var(--gold);
+  }
+  .pricing-features li:last-child{
+    border-bottom:none;
+  }
+
+  .pricing-note{
+    font-size:0.82rem;
+    color:var(--gold-light);
+    font-style:italic;
+    margin-bottom:1.8rem;
+    line-height:1.6;
+  }
+
+  .pricing-cta{
+    display:inline-block;
+    padding:12px 36px;
+    border:1px solid var(--gold);
+    color:var(--gold);
+    text-decoration:none;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    font-size:0.8rem;
+    transition:background .3s, color .3s;
+  }
+  .pricing-cta:hover{
+    background:var(--gold);
+    color:var(--bg-dark);
+  }
+
+  /* ============================================================
      SEKCJA "REZERWACJA"
      ============================================================ */
   .booking-section{
@@ -597,11 +722,13 @@
   <div class="navbar-links">
     <a href="#o-mnie">O mnie</a>
     <a href="#portfolio">Portfolio</a>
+    <a href="#cennik">Cennik</a>
     <a href="#rezerwacja">Rezerwacja</a>
   </div>
 </nav>
 
 <header id="top">
+  <img src="assets/logoretroklimat.png" alt="Retro_Klimat" class="header-logo">
   <h1 class="logo">Retro<span>_</span>Klimat</h1>
   <p>Fotografia analogowa &mdash; klatka po klatce</p>
   <span class="scroll-hint">Przewiń w dół ↓</span>
@@ -650,7 +777,7 @@
     </p>
   </div>
   <div class="about-image">
-    <img src="assets/logoretroklimat.png" alt="Retro_Klimat — logo" class="about-logo-circle">
+    <img src="assets/profile.jpg" alt="Twoje zdjęcie profilowe" class="about-logo-circle">
   </div>
 </section>
 
@@ -671,21 +798,76 @@
 </section>
 
 <!-- ============================================================
+     SEKCJA "CENNIK"
+     ============================================================ -->
+<section id="cennik" class="pricing-section">
+  <h2>Cennik</h2>
+  <div class="pricing-card">
+    <div class="pricing-card-header">
+      <h3>Sesja fotograficzna</h3>
+      <p class="pricing-amount">200 <span>zł</span></p>
+    </div>
+    <ul class="pricing-features">
+      <li>Dojazd w promieniu do 15 km w cenie</li>
+      <li>Czas trwania sesji: 1–1,5 h</li>
+      <li>Selekcja i obróbka zdjęć</li>
+    </ul>
+    <p class="pricing-note">
+      Zgoda na publikację zdjęć w portfolio / social media &mdash; rabat 10%
+    </p>
+    <a href="#rezerwacja" class="pricing-cta">Umów termin</a>
+  </div>
+</section>
+
+<!-- ============================================================
      SEKCJA "REZERWACJA"
      ============================================================ -->
 <section id="rezerwacja" class="booking-section">
   <div class="booking-box">
     <h2>Umów sesję</h2>
     <p>Wybierz dogodny termin — potwierdzenie dostaniesz od razu na maila.</p>
-    <!-- TUTAJ WKLEJ KOD IFRAME ZENCAL --><!--
+    <!-- Style dla widgetu ZenCal — atrybut data-zencal sprawia,
+         że te reguły są stosowane WEWNĄTRZ embeda (nie działa jak
+         zwykły CSS strony, bo widget renderuje się w swoim kontekście).
+         Wklejone bezpośrednio tutaj, zgodnie z instrukcją ZenCal
+         ("Własny CSS" w ich panelu). -->
+    <style data-zencal>
+      /* Dopasowanie do palety Retro_Klimat */
+      body { font-family: 'Jost', sans-serif; background: #2b2b2b; color: #e8e3d8; }
+      button, .btn, [class*="submit"], [class*="confirm"] {
+        background: #8c7b4c !important;
+        border-color: #8c7b4c !important;
+        color: #2b2b2b !important;
+        font-family: 'Jost', sans-serif !important;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      input, textarea, select {
+        background: #1f1f1f !important;
+        color: #e8e3d8 !important;
+        border: 1px solid #4a4a45 !important;
+      }
+      a { color: #b5a06a !important; }
+      /* UWAGA: nie mamy podglądu na dokładną strukturę HTML wewnątrz
+         widgetu ZenCal, więc powyższe selektory są celowo szerokie
+         (button, input, itd.) zamiast zgadywania konkretnych klas
+         (.zen-day, .calendar-day...), które mogą się różnić od
+         faktycznej implementacji. Jeśli po wdrożeniu coś nadal gryzie
+         się kolorystycznie — otwórz stronę, kliknij prawym na dany
+         element widgetu → "Zbadaj" (Inspect) w przeglądarce, sprawdź
+         faktyczną nazwę klasy/elementu i dopisz dla niej regułę tutaj.
+      */
+    </style>
+
+    <!--
 Put this code in place where you want to display your calendar
 -->
 <div
 data-type="t"
 data-owner="retroklimat"
 data-slug="sesja"
-data-primary="#035143"
-data-secondary="#F7B897"
+data-primary="#8c7b4c"
+data-secondary="#2b2b2b"
 data-avatar=""
 data-lang="pl"
 data-ampm="0"
@@ -744,18 +926,39 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
   gsap.registerPlugin(ScrollTrigger);
 
   /* ============================================================
-     WCZYTYWANIE ZDJĘĆ — automatycznie, z assets/images-data.json
+     WCZYTYWANIE ZDJĘĆ — dwa kanały niezależne
      ============================================================
-     Ten plik generuje convert.js (uruchamiany ręcznie: node convert.js
-     za każdym razem, gdy dodasz nowe zdjęcia do src_images/<kategoria>/).
-     Ma strukturę: [{ path: "assets/img/xxx.webp", category: "portret" }, ...]
-     Tutaj wyciągamy z niej same ścieżki — category zostaje zapisane
-     w frameCategories, gdyby kiedyś przydało się filtrowanie po kategorii.
+     1) loadHeroPhotos() — pobiera z assets/hero-images.json
+        (generowany przez generate-hero-photos.js, skanuje hero_images/)
+        Używane przez spiralę 3D w hero sekcji.
 
-     FALLBACK: jeśli plik nie istnieje (np. jeszcze nie uruchomiłeś
-     convert.js ani razu), używamy krótkiej, zapasowej listy zdjęć
-     z Unsplash — żeby strona nie była całkiem pusta.
+     2) loadPhotos() — pobiera z assets/images-data.json
+        (generowany przez generate-photos.js, skanuje src_images/)
+        Używane przez galerię portfolio i lightbox.
+
+     Dzięki temu możesz niezależnie zarządzać:
+     - co się wyświetla w spektakularnej spirali (hero)
+     - co jest w portfolio (galeria z filtrami)
   */
+  async function loadHeroPhotos(){
+    try {
+      const res = await fetch('assets/hero-images.json');
+      if (!res.ok) throw new Error('assets/hero-images.json not found');
+      const list = await res.json();
+      if (Array.isArray(list) && list.length > 0) return list;
+      throw new Error('hero-images.json is empty');
+    } catch (err) {
+      console.warn('Nie udało się wczytać assets/hero-images.json, używam listy zapasowej:', err.message);
+      return [
+        "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=600&q=80",
+        "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=600&q=80",
+        "https://images.unsplash.com/photo-1495805442109-bf1cf975750b?w=600&q=80",
+        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80",
+        "https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=600&q=80",
+      ];
+    }
+  }
+
   async function loadPhotos(){
     try {
       const res = await fetch('assets/images-data.json');
@@ -783,10 +986,11 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
      wczytanie zdjęć, więc siedzi w jednej, asynchronicznej funkcji
      init() — uruchamianej na samym dole tego bloku <script>. */
   async function init(){
-  const { photos, categories: photoCategories } = await loadPhotos();
+  const heroPhotos = await loadHeroPhotos();  // Spirala 3D w hero
+  const { photos, categories: photoCategories } = await loadPhotos();  // Portfolio i lightbox
 
   const carousel = document.getElementById('carousel');
-  const numImages = photos.length;
+  const numImages = heroPhotos.length;
 
   /* ============================================================
      MATEMATYKA UKŁADANIA ZDJĘĆ W SPIRALĘ (helisę)
@@ -862,7 +1066,7 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
   const frameAngles = [];
   const frameYs = [];
 
-  photos.forEach((src, i) => {
+  heroPhotos.forEach((src, i) => {
     const angle = i * theta;         // kąt_i
     const y = i * verticalStep;      // y_i — zdjęcie 0 zaczyna na wysokości środka ekranu
     frameAngles.push(angle);
@@ -871,7 +1075,7 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
     const frame = document.createElement('div');
     frame.className = 'frame';
     frame.dataset.index = i; // pozwala lightboxowi rozpoznać, które zdjęcie zostało kliknięte
-    frame.dataset.category = photoCategories[i] || ''; // kategoria z convert.js — przyda się np. do filtrowania portfolio
+    frame.dataset.category = 'hero'; // spirala to "hero" sekcja, nie ma konkretnej kategorii jak portfolio
     // Kolejność: translateY przesuwa zdjęcie wzdłuż osi spirali (w dół),
     // rotateY + translateZ ustawiają je na obwodzie okręgu — jak wcześniej.
     frame.style.transform = `translateY(${y}px) rotateY(${angle}deg) translateZ(${radius}px)`;
