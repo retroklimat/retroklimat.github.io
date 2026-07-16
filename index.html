@@ -986,6 +986,32 @@
         border: 1px solid #4a4a45 !important;
       }
 
+      /* Placeholder (np. "Zostaw swoją notatkę") — domyślny kolor
+         placeholdera zwykle jest projektowany pod BIAŁE tło (jasny,
+         ale nie za jasny szary). Na naszym ciemnym tle wychodzi to
+         na odwrót: zbyt ciemny/nieczytelny. Niektóre przeglądarki
+         dodatkowo zmniejszają opacity placeholdera domyślnie, więc
+         wymuszamy je na 1, żeby kolor niżej faktycznie się pokazał. */
+      #zencal-shadow-container input::placeholder,
+      #zencal-shadow-container textarea::placeholder {
+        color: #8c8c8c !important;
+        opacity: 1 !important;
+      }
+
+      /* Chip z wybranym terminem (np. "17.07, 21:00" z ikonką X) —
+         to osobny mały komponent z WŁASNYM, wpisanym na sztywno jasnym
+         tłem (typowy domyślny styl "Chip"), niezależnym od reguł dla
+         .MuiBox-root wyżej. Nasz jasny kolor tekstu wylądował na tym
+         jasnym tle — stąd zlewanie się. Używamy :has() (wspierane we
+         wszystkich aktualnych przeglądarkach), żeby złapać dowolny Box
+         zawierający span + ikonkę SVG (typowy wzorzec "chip z usuwaniem"),
+         bez polegania na losowej, mogącej się zmienić nazwie klasy. */
+      #zencal-shadow-container .MuiBox-root:has(> .MuiTypography-root):has(svg) {
+        background-color: #1f1f1f !important;
+        border: 1px solid #4a4a45 !important;
+        border-radius: 4px;
+      }
+
       /* Główny przycisk akcji (np. "Podsumowanie") */
       #zencal-shadow-container button {
         font-family: 'Jost', sans-serif !important;
