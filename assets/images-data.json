@@ -1,5 +1,33 @@
 [
   {
+    "path": "assets/img/motoryzacja-dscf0572-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
+    "path": "assets/img/motoryzacja-dscf0588-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
+    "path": "assets/img/motoryzacja-dscf0591-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
+    "path": "assets/img/motoryzacja-dscf0596-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
+    "path": "assets/img/motoryzacja-dscf0609-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
+    "path": "assets/img/motoryzacja-dscf0609retrooo-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
+    "path": "assets/img/motoryzacja-dscf0618retro-jpg.webp",
+    "category": "motoryzacja"
+  },
+  {
     "path": "assets/img/portret-dscf1119-jpg.webp",
     "category": "portret"
   },
@@ -32,24 +60,16 @@
     "category": "portret"
   },
   {
-    "path": "assets/img/reportaz-dscf0572-jpg.webp",
-    "category": "reportaz"
+    "path": "assets/img/portret-dscf3890-jpg.webp",
+    "category": "portret"
   },
   {
-    "path": "assets/img/reportaz-dscf0588-jpg.webp",
-    "category": "reportaz"
+    "path": "assets/img/portret-dscf4085-jpg.webp",
+    "category": "portret"
   },
   {
-    "path": "assets/img/reportaz-dscf0591-jpg.webp",
-    "category": "reportaz"
-  },
-  {
-    "path": "assets/img/reportaz-dscf0596-jpg.webp",
-    "category": "reportaz"
-  },
-  {
-    "path": "assets/img/reportaz-dscf0609-jpg.webp",
-    "category": "reportaz"
+    "path": "assets/img/portret-dscf4141-jpg.webp",
+    "category": "portret"
   },
   {
     "path": "assets/img/reportaz-dscf3851-jpg.webp",
@@ -66,41 +86,5 @@
   {
     "path": "assets/img/reportaz-dscf4048-jpg.webp",
     "category": "reportaz"
-  },
-  {
-    "path": "assets/img/rolka-dscf0572-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf0588-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf0591-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf0596-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf0609-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf3851-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf3890-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf4005-jpg.webp",
-    "category": "rolka"
-  },
-  {
-    "path": "assets/img/rolka-dscf4048-jpg.webp",
-    "category": "rolka"
   }
 ]

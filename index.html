@@ -777,7 +777,7 @@
     </p>
   </div>
   <div class="about-image">
-    <img src="assets/profile.jpg" alt="Twoje zdjęcie profilowe" class="about-logo-circle">
+    <img src="assets/profile.webp" alt="Twoje zdjęcie profilowe" class="about-logo-circle">
   </div>
 </section>
 
@@ -1112,13 +1112,23 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
     portfolioGrid.appendChild(item);
   });
 
-  // Klik na dowolny kafelek galerii otwiera lightbox z tym samym
-  // indeksem — funkcje openLightbox/showImage/syncBackgroundTo
-  // są zdefiniowane niżej, ale w JS deklaracje function są "hoistowane",
-  // więc można się do nich odwołać już tutaj bez błędu.
+  // Klik na dowolny kafelek galerii otwiera lightbox — ale TYLKO
+  // z listą aktualnie WIDOCZNYCH (przefiltrowanych) zdjęć, nie
+  // wszystkich. Dzięki temu prev/next w lightboxie po wybraniu
+  // kategorii "Portret" faktycznie lata tylko po portretach.
+  // Budujemy tę listę na bieżąco, w momencie kliknięcia — nie
+  // wcześniej — żeby zawsze odzwierciedlała aktualny filtr.
   portfolioGrid.addEventListener('click', (e) => {
     const item = e.target.closest('.portfolio-item');
-    if (item) openLightbox(parseInt(item.dataset.index, 10));
+    if (!item) return;
+
+    const visibleItems = Array.from(
+      portfolioGrid.querySelectorAll('.portfolio-item:not(.is-hidden)')
+    );
+    const visibleImages = visibleItems.map(el => el.querySelector('img').src);
+    const clickedIndex = visibleItems.indexOf(item);
+
+    openLightbox(visibleImages, clickedIndex, 'portfolio');
   });
 
   // Filtrowanie: klik na przycisk pokazuje tylko kafelki z pasującą
@@ -1195,25 +1205,30 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
   const lightboxNext     = document.getElementById('lightboxNext');
   const lightboxCounter  = document.getElementById('lightboxCounter');
 
-  let currentIndex = 0; // który indeks z tablicy photos jest aktualnie pokazany w lightboxie
+  // Lightbox nie trzyma się już jednej, globalnej tablicy photos.
+  // Zamiast tego pamięta KONTEKST, z którego został otwarty:
+  //   - lightboxItems: lista src-ów, po której prev/next się porusza
+  //   - lightboxPos:   pozycja w TEJ liście (nie globalny indeks!)
+  //   - lightboxSource: 'hero' albo 'portfolio' — od tego zależy,
+  //     czy dodatkowo synchronizujemy obrót spirali w tle (ma to
+  //     sens tylko dla 'hero', bo tylko spirala ma geometrię 3D
+  //     opisaną przez frameAngles/frameYs)
+  let lightboxItems  = [];
+  let lightboxPos    = 0;
+  let lightboxSource = 'hero';
 
   /* Doprowadza .carousel do pozycji, w której zdjęcie o danym
-     indeksie stoi dokładnie na środku ekranu (od frontu).
-     To DOKŁADNIE ta sama logika transformu co przy generowaniu
-     klatek (translateY + rotateY), tylko zastosowana do CAŁEGO
-     kontenera w kierunku odwrotnym — "cofamy" o tyle, o ile dana
-     klatka była wysunięta względem środka .carousel. */
-  function syncBackgroundTo(index){
-    const targetY = -frameYs[index]; // przesuwamy carousel tak, by y_i danej klatki wypadło na 0
+     indeksie (indeks W SPIRALI, czyli w heroPhotos) stoi dokładnie
+     na środku ekranu. Wywoływane TYLKO gdy lightboxSource === 'hero',
+     bo tylko wtedy indeks odpowiada realnej klatce w .carousel. */
+  function syncBackgroundTo(heroIndex){
+    const targetY = -frameYs[heroIndex];
 
-    // Dla obrotu liczymy NAJKRÓTSZĄ drogę do celu, żeby carousel
-    // nie zakręcił się o kilka zbędnych pełnych obrotów, jeśli
-    // scroll wcześniej nakręcił dużą wartość rotateY (np. 1500°).
     const currentRotation = gsap.getProperty(carousel, "rotateY");
-    const desiredMod = ((-frameAngles[index] % 360) + 360) % 360; // cel, znormalizowany do 0-360
+    const desiredMod = ((-frameAngles[heroIndex] % 360) + 360) % 360;
     const currentMod = ((currentRotation % 360) + 360) % 360;
     let diff = desiredMod - currentMod;
-    if (diff > 180) diff -= 360;   // wybierz krótszą drogę (np. -20° zamiast +340°)
+    if (diff > 180) diff -= 360;
     if (diff < -180) diff += 360;
     const targetRotation = currentRotation + diff;
 
@@ -1222,38 +1237,46 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
       y: targetY,
       duration: 0.7,
       ease: "power2.inOut",
-      overwrite: "auto" // przerywa ewentualną animację scrolla, żeby się nie gryzły
+      overwrite: "auto"
     });
   }
 
-  function showImage(index){
-    currentIndex = index;
-    const alt = `Retro_Klimat — fotografia ${index + 1}`;
+  function showImage(pos){
+    lightboxPos = pos;
+    const alt = `Retro_Klimat — fotografia ${pos + 1}`;
 
-    // Krótki crossfade zamiast twardej podmiany src — mniej "szarpane"
     gsap.to(lightboxImg, {
       opacity: 0,
       duration: 0.15,
       onComplete: () => {
-        lightboxImg.src = photos[index];
+        lightboxImg.src = lightboxItems[pos];
         lightboxImg.alt = alt;
         gsap.to(lightboxImg, { opacity: 1, duration: 0.25 });
       }
     });
 
-    lightboxCounter.textContent = `Nr. ${String(index + 1).padStart(2,'0')} / ${numImages}`;
-    syncBackgroundTo(index); // klisza w tle "podjeżdża" do tego zdjęcia
+    lightboxCounter.textContent = `Nr. ${String(pos + 1).padStart(2,'0')} / ${lightboxItems.length}`;
+
+    // Klisza w tle "podjeżdża" do zdjęcia TYLKO gdy przeglądamy spiralę —
+    // dla portfolio nie ma to sensu (to inny zestaw zdjęć niż w .carousel)
+    if (lightboxSource === 'hero') syncBackgroundTo(pos);
   }
 
-  function openLightbox(index){
+  /**
+   * Otwiera lightbox w konkretnym kontekście.
+   * @param {string[]} items - lista src-ów, po której będzie się dało nawigować
+   * @param {number} startPos - od którego elementu zaczynamy
+   * @param {'hero'|'portfolio'} source - kontekst, wpływa na synchronizację tła
+   */
+  function openLightbox(items, startPos, source){
+    lightboxItems  = items;
+    lightboxSource = source;
+
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden'; // blokujemy scroll strony (i tym samym scroll-driven animację)
 
-    lightboxImg.src = photos[index];
-    lightboxImg.alt = `Retro_Klimat — fotografia ${index + 1}`;
     lightboxImg.style.opacity = 1;
-    lightboxCounter.textContent = `Nr. ${String(index + 1).padStart(2,'0')} / ${numImages}`;
-    currentIndex = index;
+    showImage(startPos);
 
     gsap.fromTo(lightbox,
       { opacity: 0 },
@@ -1263,8 +1286,6 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
       { scale: 0.85 },
       { scale: 1, duration: 0.4, ease: "back.out(1.7)" }
     );
-
-    syncBackgroundTo(index); // od razu ustawiamy tło pod klikniętym zdjęciem
   }
 
   function closeLightbox(){
@@ -1280,17 +1301,17 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
   }
 
   function nextImage(){
-    showImage((currentIndex + 1) % numImages); // % zawija na początek po ostatnim zdjęciu
+    showImage((lightboxPos + 1) % lightboxItems.length); // % zawija na początek po ostatnim zdjęciu
   }
   function prevImage(){
-    showImage((currentIndex - 1 + numImages) % numImages); // +numImages zapobiega ujemnemu indeksowi
+    showImage((lightboxPos - 1 + lightboxItems.length) % lightboxItems.length); // +length zapobiega ujemnej pozycji
   }
 
-  // Event delegation — jeden listener na cały #carousel obsługuje
-  // kliknięcia we wszystkie zdjęcia, nawet te dodane dynamicznie wyżej.
+  // Klik na zdjęcie w SPIRALI — kontekst 'hero', lista = wszystkie
+  // zdjęcia spirali (heroPhotos), start = indeks klikniętej klatki.
   carousel.addEventListener('click', (e) => {
     const frame = e.target.closest('.frame');
-    if (frame) openLightbox(parseInt(frame.dataset.index, 10));
+    if (frame) openLightbox(heroPhotos, parseInt(frame.dataset.index, 10), 'hero');
   });
 
   lightboxClose.addEventListener('click', closeLightbox);
