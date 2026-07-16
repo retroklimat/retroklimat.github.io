@@ -421,6 +421,74 @@
     color:var(--gold);
   }
 
+  /* Hamburger — ukryty domyślnie (desktop), pokazywany dopiero
+     w media query poniżej dla wąskich ekranów */
+  .navbar-toggle{
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    gap:5px;
+    width:34px;
+    height:34px;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    padding:0;
+  }
+  .navbar-toggle span{
+    display:block;
+    width:100%;
+    height:2px;
+    background:var(--gold);
+    transition:transform .3s, opacity .3s;
+  }
+  /* Stan otwarty — hamburger zamienia się w "X" */
+  .navbar-toggle.active span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .navbar-toggle.active span:nth-child(2){ opacity:0; }
+  .navbar-toggle.active span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  /* ============================================================
+     NAVBAR — wersja mobilna
+     ============================================================
+     Poniżej 640px: hamburger widoczny, linki chowają się do
+     pełnoszerokościowego, rozwijanego panelu pod navbarem
+     (zamiast zawijać się w miejscu i nachodzić na hero, jak
+     działo się wcześniej). Panel pokazuje/chowa JS przez klasę
+     .navbar-links--open (patrz index.html <script> na dole pliku).
+  */
+  @media (max-width: 640px){
+    .navbar-logo img{
+      height:50px; /* mniejsze logo, więcej miejsca w wąskim pasku */
+    }
+    .navbar-toggle{
+      display:flex;
+    }
+    .navbar-links{
+      position:fixed;
+      top:78px; /* tuż pod navbarem — zgrubna wysokość paska na mobile */
+      left:0; right:0;
+      flex-direction:column;
+      align-items:center;
+      gap:0;
+      background:rgba(31,31,31,0.97);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(140,123,76,0.2);
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .35s ease;
+    }
+    .navbar-links.navbar-links--open{
+      max-height:320px; /* wystarczająco dużo dla 4 linków — zwiększ, jeśli dojdą kolejne */
+    }
+    .navbar-links a{
+      padding:16px 0;
+      width:100%;
+      text-align:center;
+      border-bottom:1px solid rgba(140,123,76,0.1);
+    }
+  }
+
   /* ============================================================
      SEKCJA "O MNIE" — dwukolumnowy układ
      ============================================================ */
@@ -719,12 +787,18 @@
   <a href="#top" class="navbar-logo">
     <img src="assets/logoretroklimat.png" alt="Retro_Klimat">
   </a>
-  <div class="navbar-links">
+  <div class="navbar-links" id="navbarLinks">
     <a href="#o-mnie">O mnie</a>
     <a href="#portfolio">Portfolio</a>
     <a href="#cennik">Cennik</a>
     <a href="#rezerwacja">Rezerwacja</a>
   </div>
+  <!-- Hamburger — widoczny tylko na wąskich ekranach (patrz CSS media query) -->
+  <button class="navbar-toggle" id="navbarToggle" aria-label="Otwórz menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
 
 <header id="top">
@@ -832,52 +906,106 @@
          Wklejone bezpośrednio tutaj, zgodnie z instrukcją ZenCal
          ("Własny CSS" w ich panelu). -->
     <style data-zencal>
-      /* Dopasowanie do palety Retro_Klimat */
-      body { font-family: 'Jost', sans-serif; background: #2b2b2b; color: #e8e3d8; }
+      /* ============================================================
+         Widget zbudowany na Material-UI (klasy MuiBox-root,
+         MuiTypography-root, MuiGrid-root...), całość opakowana w
+         #zencal-shadow-container — potwierdzone w DevTools. Dzięki
+         temu możemy celować precyzyjnie, zamiast zgadywać.
+         ============================================================ */
 
-      button, .btn, [class*="submit"], [class*="confirm"] {
-        background: #8c7b4c !important;
-        border-color: #8c7b4c !important;
-        color: #2b2b2b !important;
+      #zencal-shadow-container {
+        background: #2b2b2b !important;
         font-family: 'Jost', sans-serif !important;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
       }
-      input, textarea, select {
-        background: #1f1f1f !important;
-        color: #e8e3d8 !important;
-        border: 1px solid #4a4a45 !important;
-      }
-      a { color: #b5a06a !important; }
 
-      /* Próba wyłapania białych "kart"/paneli kalendarza — wiele
-         widgetów kalendarzowych buduje siatkę dni na bibliotekach
-         typu react-day-picker (stąd prefiks "rdp-") albo generycznie
-         nazwanych klasach typu "card"/"panel"/"container". To strzał
-         bez pełnego podglądu DOM-u widgetu — jeśli nie zadziała,
-         patrz uwaga niżej. */
-      .rdp, [class*="rdp"],
-      [class*="calendar"], [class*="Calendar"],
-      [class*="card"], [class*="panel"], [class*="container"] {
+      /* CAŁY tekst w widgecie — MUI domyślnie koloruje "drugorzędny"
+         tekst na coś w stylu rgba(0,0,0,0.6) (czarny, półprzezroczysty).
+         Na ciemnym tle wygląda to na ledwo widoczny, "wyblakły" napis —
+         to dokładnie ten efekt, który widziałeś przy "Wybierz daty".
+         !important wygrywa z inline style="color:..." który MUI często
+         dokleja bezpośrednio do elementu. */
+      #zencal-shadow-container .MuiTypography-root {
+        color: #e8e3d8 !important;
+      }
+
+      /* Nagłówki (h2, h3 z klasą MuiTypography-h2 itp.) — grubszy,
+         bardziej wyeksponowany krem, plus nasz serif dla spójności
+         z resztą strony */
+      #zencal-shadow-container .MuiTypography-h1,
+      #zencal-shadow-container .MuiTypography-h2,
+      #zencal-shadow-container .MuiTypography-h3 {
+        font-family: 'Playfair Display', serif !important;
+        color: #e8e3d8 !important;
+      }
+
+      /* Panele/karty (białe tła kontenerów) — MuiBox-root to bardzo
+         ogólna klasa używana wszędzie w MUI, więc tło ustawiamy na
+         transparent (dziedziczy ciemne tło #zencal-shadow-container),
+         a nie na konkretny kolor — inaczej zaczęlibyśmy "zaklejać"
+         również elementy, które mają zostać przezroczyste. */
+      #zencal-shadow-container .MuiBox-root {
+        background-color: transparent;
+      }
+
+      /* Przyciski i klikalne "kafelki" (organizator, wybór daty) —
+         MUI renderuje je zwykle jako MuiButtonBase-root pod spodem */
+      #zencal-shadow-container .MuiButtonBase-root {
         background-color: #1f1f1f !important;
         color: #e8e3d8 !important;
         border-color: #4a4a45 !important;
       }
-
-      /* Pojedyncze komórki dni w siatce — часто <button> lub
-         role="button"/role="gridcell" zamiast prawdziwego <button> */
-      [class*="day"], [role="gridcell"], [role="button"] {
-        background-color: transparent !important;
-        color: #e8e3d8 !important;
-      }
-      [class*="day"]:hover, [role="gridcell"]:hover, [role="button"]:hover {
+      #zencal-shadow-container .MuiButtonBase-root:hover {
         background-color: #8c7b4c !important;
         color: #2b2b2b !important;
       }
 
-      /* UWAGA: nie mamy podglądu na dokładną strukturę HTML wewnątrz
-         widgetu ZenCal, więc część powyższych selektorów to świadome
-         zgadywanie (oparte na popularnych konwencjach nazewniczych),
+      /* Dni w kalendarzu — jeśli widget używa MUI X Date Pickers,
+         komórki dni mają klasę MuiPickersDay-root, a wybrany/aktywny
+         dzień dostaje dodatkowo klasę Mui-selected */
+      #zencal-shadow-container .MuiPickersDay-root {
+        color: #e8e3d8 !important;
+        border-color: #4a4a45 !important;
+      }
+      #zencal-shadow-container .MuiPickersDay-root.Mui-selected,
+      #zencal-shadow-container .MuiPickersDay-root:hover {
+        background-color: #8c7b4c !important;
+        color: #2b2b2b !important;
+      }
+      #zencal-shadow-container .Mui-disabled {
+        color: #6b6b6b !important;
+        opacity: 0.5 !important;
+      }
+
+      /* Pola formularza (krok "Podsumowanie") */
+      #zencal-shadow-container input,
+      #zencal-shadow-container textarea,
+      #zencal-shadow-container select,
+      #zencal-shadow-container .MuiInputBase-root {
+        background: #1f1f1f !important;
+        color: #e8e3d8 !important;
+        border: 1px solid #4a4a45 !important;
+      }
+
+      /* Główny przycisk akcji (np. "Podsumowanie") */
+      #zencal-shadow-container button {
+        font-family: 'Jost', sans-serif !important;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      /* UWAGA: klasy MuiPickersDay-root i MuiInputBase-root to
+         standardowe nazwy z biblioteki MUI X Date Pickers — bardzo
+         prawdopodobne, ale nie 100% potwierdzone w Twoim DevTools
+         (widziałeś na razie tylko MuiBox/MuiGrid/MuiTypography).
+         Jeśli któryś fragment nadal zostanie w złym kolorze —
+         zrób dokładnie to, co poprzednio: prawym → Zbadaj → sprawdź
+         klasę w zakładce Elements → dopisz dla niej regułę tutaj,
+         w formacie:
+           #zencal-shadow-container .DokladnaKlasaZInspektora {
+             color: #e8e3d8 !important;
+           }
+      */
+    </style>
          nie pewność. Jeśli po wdrożeniu nadal widzisz białe tło w
          jakimś miejscu — kliknij tam prawym przyciskiem na stronie →
          "Zbadaj" (Inspect) w przeglądarce, sprawdź faktyczną nazwę
@@ -1363,6 +1491,30 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
   } // koniec async function init()
 
   init(); // odpalamy całość dopiero po wczytaniu listy zdjęć
+
+  /* ============================================================
+     HAMBURGER — otwieranie/zamykanie menu mobilnego
+     ============================================================
+     Poza async init() celowo — nie zależy od wczytania zdjęć,
+     więc menu działa natychmiast, zanim spirala/portfolio się załadują. */
+  const navbarToggle = document.getElementById('navbarToggle');
+  const navbarLinks   = document.getElementById('navbarLinks');
+
+  navbarToggle.addEventListener('click', () => {
+    const isOpen = navbarLinks.classList.toggle('navbar-links--open');
+    navbarToggle.classList.toggle('active', isOpen);
+    navbarToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  // Klik na dowolny link w menu — zamyka panel (przydatne po
+  // przejściu do sekcji, żeby menu nie zasłaniało treści)
+  navbarLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navbarLinks.classList.remove('navbar-links--open');
+      navbarToggle.classList.remove('active');
+      navbarToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
 </script>
 
 </body>
