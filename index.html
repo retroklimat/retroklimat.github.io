@@ -993,25 +993,58 @@
         letter-spacing: 0.08em;
       }
 
-      /* UWAGA: klasy MuiPickersDay-root i MuiInputBase-root to
-         standardowe nazwy z biblioteki MUI X Date Pickers — bardzo
-         prawdopodobne, ale nie 100% potwierdzone w Twoim DevTools
-         (widziałeś na razie tylko MuiBox/MuiGrid/MuiTypography).
+      /* Stałe, "ludzkie" nazwy klas znalezione w Twoim DevTools —
+         w przeciwieństwie do losowych hashy MUI (typu zencal-12f2zjk),
+         te są nadawane bezpośrednio przez ZenCal i powinny być stabilne:
+         - .zencal-embed-booking-view-calendar-date-button → komórka dnia
+         - .zencal-embed-booking-view-hour-list-item → wiersz godziny
+         Dodatkowo [id^="zencal-embed-"] łapie WSZYSTKIE kontenery
+         ZenCal-a naraz (np. zencal-embed-schedule-view-calendar-people-
+         -container, gdzie siedział biały pasek z "Rafał") — to
+         rozwiązuje przypadki, gdy nasze wcześniejsze .MuiBox-root
+         { background: transparent } nie wystarczało, bo białe tło
+         siedziało wyżej, na samym kontenerze, a nie na MuiBox w środku. */
+      [id^="zencal-embed-"] {
+        background-color: transparent !important;
+      }
+
+      .zencal-embed-booking-view-calendar-date-button {
+        background-color: #1f1f1f !important;
+        color: #e8e3d8 !important;
+        border: 1px solid #4a4a45 !important;
+      }
+      .zencal-embed-booking-view-calendar-date-button:hover {
+        background-color: #8c7b4c !important;
+        color: #2b2b2b !important;
+      }
+
+      .zencal-embed-booking-view-hour-list-item {
+        background-color: #1f1f1f !important;
+        color: #e8e3d8 !important;
+        border: 1px solid #4a4a45 !important;
+      }
+      .zencal-embed-booking-view-hour-list-item:hover {
+        background-color: #8c7b4c !important;
+        color: #2b2b2b !important;
+      }
+
+      /* Strzałki nawigacji miesiąca/godzin — zwykle ikony SVG
+         kolorowane przez currentColor, więc wystarczy ustawić color
+         na rodzicu-przycisku */
+      #zencal-shadow-container .MuiIconButton-root {
+        color: #8c7b4c !important;
+      }
+
+      /* UWAGA: klasy MuiPickersDay-root i MuiInputBase-root (użyte
+         wyżej) to standardowe nazwy z biblioteki MUI X Date Pickers —
+         prawdopodobne, ale nie 100% potwierdzone w Twoim DevTools.
          Jeśli któryś fragment nadal zostanie w złym kolorze —
          zrób dokładnie to, co poprzednio: prawym → Zbadaj → sprawdź
          klasę w zakładce Elements → dopisz dla niej regułę tutaj,
          w formacie:
-           #zencal-shadow-container .DokladnaKlasaZInspektora {
+           .DokladnaKlasaZInspektora {
              color: #e8e3d8 !important;
            }
-      */
-    </style>
-         nie pewność. Jeśli po wdrożeniu nadal widzisz białe tło w
-         jakimś miejscu — kliknij tam prawym przyciskiem na stronie →
-         "Zbadaj" (Inspect) w przeglądarce, sprawdź faktyczną nazwę
-         klasy tego elementu w zakładce Elements/Inspector, i dopisz
-         dla niej regułę w tym bloku, np.:
-           .nazwa-klasy-z-inspektora { background-color: #1f1f1f !important; }
       */
     </style>
 
