@@ -1008,6 +1008,8 @@
         background-color: transparent !important;
       }
 
+      /* Domyślnie: dzień DOSTĘPNY do wyboru — wyraźny "kafelek"
+         z obwódką, tak jak w oryginalnym (białym) wyglądzie widgetu */
       .zencal-embed-booking-view-calendar-date-button {
         background-color: #1f1f1f !important;
         color: #e8e3d8 !important;
@@ -1016,6 +1018,45 @@
       .zencal-embed-booking-view-calendar-date-button:hover {
         background-color: #8c7b4c !important;
         color: #2b2b2b !important;
+      }
+
+      /* Dzień NIEDOSTĘPNY (przeszły / brak terminów) — bez obwódki,
+         przygaszony numer, bez reakcji na hover — dokładnie tak jak
+         w oryginalnym widgecie (plain, wyszarzony numer bez "kafelka").
+         Nie mamy potwierdzonej w Twoim DevTools dokładnej nazwy klasy
+         dla tego konkretnego stanu (na zrzutach widziałeś na razie
+         tylko dni DOSTĘPNE) — to zestaw najpopularniejszych wariantów,
+         jakich używają widgety oparte o MUI. Jeśli żaden nie trafi:
+         zbadaj wyszarzony, nieklikalny dzień i podeślij mi jego
+         faktyczną klasę z zakładki Elements. */
+      .zencal-embed-booking-view-calendar-date-button[disabled],
+      .zencal-embed-booking-view-calendar-date-button.Mui-disabled,
+      .zencal-embed-booking-view-calendar-date-button[aria-disabled="true"],
+      .zencal-embed-booking-view-calendar-date-button--disabled {
+        background-color: transparent !important;
+        border-color: transparent !important;
+        color: #6b6b6b !important;
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+      }
+      .zencal-embed-booking-view-calendar-date-button[disabled]:hover,
+      .zencal-embed-booking-view-calendar-date-button.Mui-disabled:hover,
+      .zencal-embed-booking-view-calendar-date-button[aria-disabled="true"]:hover,
+      .zencal-embed-booking-view-calendar-date-button--disabled:hover {
+        background-color: transparent !important;
+        color: #6b6b6b !important;
+      }
+
+      /* Dzień WYBRANY (kliknięty/zaznaczony) — trwałe wyróżnienie
+         kolorem akcentu, nie tylko na hover. Podobnie: zgadywane
+         nazwy klas, do potwierdzenia przez inspektor w razie potrzeby. */
+      .zencal-embed-booking-view-calendar-date-button.Mui-selected,
+      .zencal-embed-booking-view-calendar-date-button[aria-selected="true"],
+      .zencal-embed-booking-view-calendar-date-button--selected {
+        background-color: #8c7b4c !important;
+        border-color: #8c7b4c !important;
+        color: #2b2b2b !important;
+        font-weight: 600;
       }
 
       .zencal-embed-booking-view-hour-list-item {
