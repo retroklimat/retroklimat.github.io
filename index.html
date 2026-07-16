@@ -1061,6 +1061,20 @@
         font-weight: 600;
       }
 
+      /* Pole numeru telefonu — chipsik z kodem kraju ("PL +48") ma
+         własne, wewnętrzne białe tło (widoczne w Twoim DevTools jako
+         inline style na <input>), które nasze wcześniejsze ogólne
+         reguły (.MuiBox-root, input) nie w pełni złapały. Mamy
+         stabilne ID kontenera tego konkretnego pola, więc łapiemy
+         WSZYSTKO w jego wnętrzu jedną, mocną regułą — bezpieczne,
+         bo dotyczy tylko tego jednego pola, nie całego widgetu. */
+      #zencal-embed-booking-form-view-your-details-phone-container,
+      #zencal-embed-booking-form-view-your-details-phone-container * {
+        background-color: #1f1f1f !important;
+        color: #e8e3d8 !important;
+        border-color: #4a4a45 !important;
+      }
+
       .zencal-embed-booking-view-hour-list-item {
         background-color: #1f1f1f !important;
         color: #e8e3d8 !important;
