@@ -12,6 +12,31 @@
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="assets/aperture-icon.png">
 
+<!-- SEO: opis pod wyniki wyszukiwania Google — podmień treść na
+     własną, najlepiej z nazwą miasta/regionu, w którym działasz
+     (lokalne frazy typu "fotograf [miasto]" realnie pomagają się
+     wybić w wynikach, bardziej niż ogólne "fotografia analogowa") -->
+<meta name="description" content="Fotograf z Pszowa, jeżdżę też do Wodzisławia, Rybnika i Raciborza. Retro klimat, analogowy vibe, sesje z charakterem — portrety, reportaże, mocne fotki aut. Umów termin online, bez zbędnego formalizmu.">
+
+<!-- Canonical — wskazuje Google jednoznaczny, "kanoniczny" adres
+     strony. Podmień na swoją faktyczną domenę, jeśli inna niż poniżej -->
+<link rel="canonical" href="https://fotoretroklimat.pl/">
+
+<!-- Open Graph — steruje tym, jak wygląda podgląd linku po wklejeniu
+     na Facebooku, Messengerze, WhatsAppie itp. (miniaturka, tytuł, opis) -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:title" content="Retro_Klimat — Fotografia Analogowa">
+<meta property="og:description" content="Fotograf z Pszowa i okolic (Wodzisław, Rybnik, Racibórz). Retro klimat, analogowy vibe, sesje z charakterem. Umów termin online.">
+<meta property="og:image" content="https://fotoretroklimat.pl/assets/logoretroklimat.png">
+<meta property="og:url" content="https://fotoretroklimat.pl/">
+
+<!-- Twitter/X card — analogicznie, dla podglądu na X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Retro_Klimat — Fotografia Analogowa">
+<meta name="twitter:description" content="Fotograf z Pszowa i okolic. Retro klimat, analogowy vibe, sesje z charakterem.">
+<meta name="twitter:image" content="https://fotoretroklimat.pl/assets/logoretroklimat.png">
+
 <style>
   /* ============================================================
      1. ZMIENNE GLOBALNE — Twoja paleta Retro_Klimat
@@ -355,7 +380,8 @@
   }
   footer h2{
     font-size:clamp(1.8rem, 4vw, 3rem);
-    margin-bottom:1rem;
+    margin-bottom:1.8rem;
+    max-width:750px; /* dłuższe zdanie (nie krótka fraza) - ograniczamy szerokość, żeby ładnie się zawijało */
   }
   footer p{
     color:var(--gold-light);
@@ -506,7 +532,6 @@
     margin-bottom:1.2rem;
     color:var(--cream);
   }
-  .about-text h2 span{ color:var(--gold); font-style:italic; }
   .about-text p{
     color:var(--gold-light);
     line-height:1.8;
@@ -804,7 +829,7 @@
 <header id="top">
   <img src="assets/logoretroklimat.png" alt="Retro_Klimat" class="header-logo">
   <h1 class="logo">Retro<span>_</span>Klimat</h1>
-  <p>Fotografia analogowa &mdash; klatka po klatce</p>
+  <p>Analogowy klimat, cyfrowa jakość</p>
   <span class="scroll-hint">Przewiń w dół ↓</span>
 </header>
 
@@ -830,8 +855,7 @@
 </section>
 
 <footer>
-  <h2>Uchwycone w kadrze</h2>
-  <p>Każde zdjęcie to osobna historia, zatrzymana w czasie. Retro_Klimat to spojrzenie na świat przez pryzmat analogowej estetyki i cierpliwego rzemiosła.</p>
+  <h2>Zdjęcia wyglądające jak wspomnienia, zanim jeszcze się nimi staną.</h2>
   <a href="#rezerwacja" class="contact">Umów sesję</a>
 </footer>
 
@@ -840,14 +864,14 @@
      ============================================================ -->
 <section id="o-mnie" class="about-section">
   <div class="about-text">
-    <h2>O <span>mnie</span></h2>
+    <h2>O mnie</h2>
     <p>
-      Fotografię traktuję jak rzemiosło — cierpliwe, uważne, zbudowane
-      na świetle i chwili, która się nie powtórzy. Retro_Klimat to
-      analogowa estetyka przeniesiona w cyfrowy kadr: stonowane barwy,
-      ziarno filmu i historie zatrzymane na dłużej niż jedno spojrzenie.
-      Każda sesja to osobna opowieść — reportaż, portret czy klimat drogi —
-      dokumentowana z szacunkiem dla detalu i naturalnego charakteru chwili.
+      Nie lubię sztywnych sesji, gdzie wszyscy udają, że się dobrze
+      bawią. Wolę złapać to, co się naprawdę dzieje — w swoim,
+      analogowym stylu. Portrety, reportaże, klimat drogi w Twoim
+      aucie — nieważne co planujesz, dogadamy szczegóły, a ja zajmę
+      się resztą. Bez presji, bez sztucznych uśmiechów, za to z
+      ziarnem i charakterem.
     </p>
   </div>
   <div class="about-image">
