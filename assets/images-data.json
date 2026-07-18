@@ -1,5 +1,101 @@
 [
   {
+    "path": "assets/img/01-portret-01-img-0068.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-02-img-0097.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-03-img-0197.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-04-img-0218.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-05-img-0238.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-06-img-0282.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-07-dscf3382-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-08-dscf3320-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-09-dscf3564-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-10-dscf3050-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-11-dscf2852-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-12-dscf2796-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1119-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1149-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1194-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1731-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1754-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1776-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf1781-2.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf3748-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf3804-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf3890-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf4085-jpg.webp",
+    "category": "01_portret"
+  },
+  {
+    "path": "assets/img/01-portret-dscf4141-2.webp",
+    "category": "01_portret"
+  },
+  {
     "path": "assets/img/motoryzacja-dscf0609retrooo-jpg.webp",
     "category": "motoryzacja"
   },
@@ -14,106 +110,6 @@
   {
     "path": "assets/img/motoryzacja-dscf3248-jpg.webp",
     "category": "motoryzacja"
-  },
-  {
-    "path": "assets/img/portret-01-img-0068.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-02-img-0097.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-03-img-0197.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-04-img-0218.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-05-img-0238.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-06-img-0282.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-07-dscf3382-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-08-dscf3320-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-09-dscf3564-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-10-dscf3050-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-11-dscf2852-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-12-dscf2796-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1119-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1149-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1194-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1586-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1731-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1754-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1776-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf1781-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf3748-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf3804-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf3890-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf4085-jpg.webp",
-    "category": "portret"
-  },
-  {
-    "path": "assets/img/portret-dscf4141-jpg.webp",
-    "category": "portret"
   },
   {
     "path": "assets/img/reportaz-dscf3769-jpg.webp",
