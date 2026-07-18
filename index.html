@@ -825,6 +825,36 @@
   }
   .footer-legal-link:hover{ color:var(--gold-light); }
 
+  /* Kod QR do Instagrama — biała karta z ramką, żeby kod miał dobry
+     kontrast (czarne moduły na białym tle skanują się najpewniej,
+     inwersja kolorów pod ciemny motyw psułaby czytelność dla skanera) */
+  .footer-qr{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    margin-bottom:8px;
+  }
+  .footer-qr img{
+    display:block;
+    width:120px;
+    height:120px;
+    padding:10px;
+    background:#fff;
+    border:1px solid var(--frame-border);
+    border-radius:16px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.35);
+    transition:transform .3s;
+  }
+  .footer-qr:hover img{ transform:scale(1.04); }
+  .footer-qr span{
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--gold-light);
+  }
+
   /* ============================================================
      PASEK COOKIES
      ============================================================ */
@@ -928,7 +958,7 @@
 </section>
 
 <footer>
-  <h2>Wspomnienia są ulotne- uchywć je na zawsze.</h2>
+  <h2>Zdjęcia wyglądające jak wspomnienia, zanim jeszcze się nimi staną.</h2>
   <a href="#rezerwacja" class="contact">Umów sesję</a>
 </footer>
 
@@ -940,7 +970,7 @@
     <h2>O mnie</h2>
     <p>
       Nie lubię sztywnych sesji, gdzie wszyscy udają, że się dobrze
-      bawią. Wolę złapać to, co się naprawdę dzieje —&nbsp;w&nbsp;swoim
+      bawią. Wolę złapać to, co się naprawdę dzieje —&nbsp;w&nbsp;swoim,
       analogowym stylu. Portrety, reportaże, sesje plenerowe —
       nieważne co planujesz, dogadamy szczegóły, a&nbsp;ja zajmę
       się resztą. Bez presji, bez sztucznych uśmiechów, za to z&nbsp;ziarnem
@@ -1280,6 +1310,19 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
      ============================================================ -->
 <footer class="site-footer">
   <p>@RETROKLIMAT.FOTO</p>
+
+  <!-- Kod QR do Instagrama — wygodne dla odwiedzających na komputerze,
+       żeby zeskanować telefonem zamiast ręcznie wpisywać nazwę profilu.
+       Generowany na żywo przez darmowe API (api.qrserver.com) —
+       standardowy sposób użycia tej usługi, bez dodatkowych bibliotek. -->
+  <a href="https://instagram.com/retroklimat.foto" target="_blank" rel="noopener" class="footer-qr" aria-label="Zeskanuj, aby przejść do Instagrama">
+    <img
+      src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&color=8c7b4c&bgcolor=ffffff&data=https://instagram.com/retroklimat.foto"
+      alt="Kod QR prowadzący do profilu Instagram Retro_Klimat"
+      width="120" height="120" loading="lazy">
+    <span>Zeskanuj i zaobserwuj</span>
+  </a>
+
   <div class="footer-icons">
     <a href="https://instagram.com/retroklimat.foto" target="_blank" rel="noopener" aria-label="Instagram">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
