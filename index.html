@@ -770,6 +770,22 @@
     margin-bottom:2rem;
   }
 
+  /* Notka o przetwarzaniu danych — celowo drobna i stonowana,
+     to informacja prawna, nie element zachęcający do kliknięcia */
+  .rodo-consent{
+    font-size:0.78rem;
+    color:var(--frame-border);
+    line-height:1.6;
+    max-width:520px;
+    margin:0 auto 1.5rem;
+    text-align:center;
+  }
+  .rodo-consent a{
+    color:var(--gold-light);
+    text-decoration:underline;
+  }
+  .rodo-consent a:hover{ color:var(--gold); }
+
   /* ============================================================
      STOPKA — prosty pasek na samym dole
      ============================================================ */
@@ -801,6 +817,63 @@
     width:22px;
     height:22px;
   }
+  .footer-legal-link{
+    color:var(--frame-border);
+    font-size:0.75rem;
+    text-decoration:none;
+    letter-spacing:0.05em;
+  }
+  .footer-legal-link:hover{ color:var(--gold-light); }
+
+  /* ============================================================
+     PASEK COOKIES
+     ============================================================ */
+  .cookie-banner{
+    position:fixed;
+    left:0; right:0; bottom:0;
+    z-index:200;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:center;
+    gap:20px;
+    padding:18px 5%;
+    background:rgba(31,31,31,0.97);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border-top:1px solid rgba(140,123,76,0.25);
+    transform:translateY(100%);
+    transition:transform .4s ease;
+  }
+  .cookie-banner--visible{
+    transform:translateY(0);
+  }
+  .cookie-banner p{
+    color:var(--cream);
+    font-size:0.85rem;
+    max-width:600px;
+    margin:0;
+    line-height:1.5;
+  }
+  .cookie-banner a{
+    color:var(--gold-light);
+    text-decoration:underline;
+  }
+  .cookie-banner a:hover{ color:var(--gold); }
+  .cookie-banner button{
+    background:var(--gold);
+    color:var(--bg-dark);
+    border:none;
+    padding:10px 28px;
+    font-family:'Jost', sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:opacity .3s;
+  }
+  .cookie-banner button:hover{ opacity:0.85; }
 </style>
 </head>
 <body>
@@ -887,7 +960,7 @@
   <div class="filter-buttons" id="filterButtons">
     <button class="filter-btn active" data-filter="all">Wszystkie</button>
     <button class="filter-btn" data-filter="reportaz">Reportaż</button>
-    <button class="filter-btn" data-filter="01_portret">Portret</button>
+    <button class="filter-btn" data-filter="portret">Portret</button>
     <button class="filter-btn" data-filter="motoryzacja">Motoryzacja</button>
   </div>
   <!-- Kafelki generowane dynamicznie w script.js na podstawie
@@ -1155,6 +1228,15 @@
       */
     </style>
 
+    <p class="rodo-consent">
+      Wysyłając formularz, zgadzasz się na przetwarzanie Twoich danych
+      (np. imię, e-mail) w celu umówienia i przeprowadzenia sesji.
+      Administratorem danych jestem ja: Rafał Duda, kontakt:
+      <a href="mailto:durafal00@gmail.com">durafal00@gmail.com</a>.
+      Szczegóły znajdziesz w
+      <a href="polityka-prywatnosci.html" target="_blank" rel="noopener">Polityce Prywatności</a>.
+    </p>
+
     <!--
 Put this code in place where you want to display your calendar
 -->
@@ -1213,6 +1295,7 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
       </svg>
     </a>
   </div>
+  <a href="polityka-prywatnosci.html" class="footer-legal-link">Polityka prywatności</a>
 </footer>
 
 <!-- GSAP + ScrollTrigger z CDN -->
@@ -1656,6 +1739,46 @@ src="https://app.zencal.io/js/embed.js?v=4.2.0">
     });
   });
 </script>
+
+  <!-- ============================================================
+       PASEK COOKIES — informacyjny, nie blokujący.
+       ZenCal to funkcja NIEZBĘDNA do działania formularza rezerwacji
+       (nie marketing/tracking), więc zgodnie z ogólną praktyką nie
+       blokujemy ładowania strony do czasu kliknięcia — tylko
+       informujemy. Zapamiętywane w localStorage, żeby nie pokazywać
+       się przy każdej wizycie.
+       ============================================================ -->
+  <div class="cookie-banner" id="cookieBanner">
+    <p>
+      Strona korzysta z plików cookies wyłącznie w zakresie niezbędnym
+      do działania formularza rezerwacji (ZenCal). Więcej w
+      <a href="polityka-prywatnosci.html">Polityce Prywatności</a>.
+    </p>
+    <button id="cookieBannerAccept">Rozumiem</button>
+  </div>
+
+  <script>
+    (function(){
+      var banner = document.getElementById('cookieBanner');
+      var accept = document.getElementById('cookieBannerAccept');
+      var STORAGE_KEY = 'retroklimat_cookie_consent';
+
+      try {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+          banner.classList.add('cookie-banner--visible');
+        }
+      } catch (e) {
+        // Jeśli localStorage niedostępny (np. tryb prywatny) — pokaż
+        // baner mimo wszystko, po prostu będzie się pojawiał częściej.
+        banner.classList.add('cookie-banner--visible');
+      }
+
+      accept.addEventListener('click', function(){
+        banner.classList.remove('cookie-banner--visible');
+        try { localStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+      });
+    })();
+  </script>
 
 </body>
 </html>
