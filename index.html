@@ -1268,9 +1268,42 @@
     </p>
 
     <!-- Cal inline embed code begins -->
-    <div id="my-cal-inline-sesja-plenerowa" style="width:100%;min-height:760px;overflow:auto;background:#2b2b2b;color:#e8e3d8;border:2px solid #8c7b4c;border-radius:28px;
-      box-shadow:0 24px 80px rgba(0,0,0,.16);padding:1rem;">
-    </div>
+    <style>
+      #my-cal-inline-sesja-plenerowa {
+        width: 100%;
+        min-height: 760px;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        background: #2b2b2b;
+        color: #e8e3d8;
+        border: 2px solid #8c7b4c;
+        border-radius: 28px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, .16);
+        padding: 1rem;
+      }
+      #my-cal-inline-sesja-plenerowa iframe,
+      #my-cal-inline-sesja-plenerowa .cal-inline-embed,
+      #my-cal-inline-sesja-plenerowa .cal-embed {
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      @media (max-width: 900px) {
+        #my-cal-inline-sesja-plenerowa {
+          min-height: 900px;
+          padding: 0.8rem;
+          border-radius: 24px;
+        }
+      }
+      @media (max-width: 640px) {
+        #my-cal-inline-sesja-plenerowa {
+          min-height: 980px;
+          padding: 0.6rem;
+          border-radius: 18px;
+        }
+      }
+    </style>
+    <div id="my-cal-inline-sesja-plenerowa"></div>
     <script type="text/javascript">
       (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
       Cal("init", "sesja-plenerowa", {origin:"https://app.cal.com"});
@@ -1285,7 +1318,12 @@
           "primaryColor":"#8c7b4c",
           "textColor":"#e8e3d8",
           "backgroundColor":"#2b2b2b",
-          "accentColor":"#8c7b4c"
+          "accentColor":"#8c7b4c",
+          "contentPadding":"0",
+          "containerPadding":"0",
+          "maxWidth":"100%",
+          "minWidth":"0",
+          "responsive": true
         },
         calLink: "retroklimat/sesja-plenerowa",
       });
@@ -1297,7 +1335,8 @@
           "brandColor":"#8c7b4c",
           "textColor":"#e8e3d8",
           "backgroundColor":"#2b2b2b"
-        }
+        },
+        "responsive": true
       });
       </script>
     <!-- Cal inline embed code ends -->
