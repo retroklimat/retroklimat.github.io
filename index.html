@@ -754,10 +754,10 @@
     padding:40px 5% 120px;
   }
   .booking-box{
-    max-width:800px;
+    width:min(100%, 800px);
     margin:0 auto;
     text-align:center;
-    padding:50px 40px;
+    padding:40px 30px;
     border:1px solid var(--frame-border);
     background:var(--bg-darker);
   }
@@ -768,6 +768,16 @@
   .booking-box p{
     color:var(--gold-light);
     margin-bottom:2rem;
+  }
+  @media (max-width: 760px) {
+    .booking-box{
+      width:100%;
+      padding:24px 18px;
+      border-width:1px;
+    }
+    .booking-section{
+      padding:30px 4% 80px;
+    }
   }
 
   /* Notka o przetwarzaniu danych — celowo drobna i stonowana,
@@ -1274,7 +1284,7 @@
         min-height: 760px;
         max-width: 100%;
         box-sizing: border-box;
-        overflow: hidden;
+        overflow: visible;
         background: #2b2b2b;
         color: #e8e3d8;
         border: 2px solid #8c7b4c;
@@ -1282,11 +1292,18 @@
         box-shadow: 0 24px 80px rgba(0, 0, 0, .16);
         padding: 1rem;
       }
+      #my-cal-inline-sesja-plenerowa > * {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+      }
       #my-cal-inline-sesja-plenerowa iframe,
       #my-cal-inline-sesja-plenerowa .cal-inline-embed,
       #my-cal-inline-sesja-plenerowa .cal-embed {
         width: 100% !important;
         min-width: 0 !important;
+        height: auto !important;
       }
       @media (max-width: 900px) {
         #my-cal-inline-sesja-plenerowa {
