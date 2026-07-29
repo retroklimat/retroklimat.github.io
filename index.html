@@ -1267,30 +1267,40 @@
       <a href="polityka-prywatnosci.html" target="_blank" rel="noopener">Polityce Prywatności</a>.
     </p>
 
-    <!--
-Put this code in place where you want to display your calendar
--->
-<div
-data-type="t"
-data-owner="retroklimat"
-data-slug="sesja"
-data-primary="#8c7b4c"
-data-secondary="#2b2b2b"
-data-avatar="https://meetendly.fra1.digitaloceanspaces.com/profile-images/01KC31iP7Y6OjDn5lBmW7S9aIZceJl3f742376-917a-45b5-82c6-a45f4a917c84.png"
-data-lang="pl"
-data-ampm="0"
-data-hide-details="1"
-data-topics-list="38d6de79-f558-44b3-bc31-76c22e4db17e"
-class="zencal-embed"></div>
+    <!-- Cal inline embed code begins -->
+    <div id="my-cal-inline-sesja-plenerowa" style="width:100%;min-height:760px;overflow:auto;background:#2b2b2b;color:#e8e3d8;border:2px solid #8c7b4c;border-radius:28px;
+      box-shadow:0 24px 80px rgba(0,0,0,.16);padding:1rem;">
+    </div>
+    <script type="text/javascript">
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+      Cal("init", "sesja-plenerowa", {origin:"https://app.cal.com"});
+      Cal.config = Cal.config || {};
+      Cal.config.forwardQueryParams = true;
 
-<!--
-Put this code above the closing </body> tag
--->
-<script
-async
-data-cookieconsent="ignore"
-src="https://app.zencal.io/js/embed.js?v=4.2.0">
-</script>
+      Cal.ns["sesja-plenerowa"]("inline", {
+        elementOrSelector:"#my-cal-inline-sesja-plenerowa",
+        config: {
+          "layout":"month_view",
+          "useSlotsViewOnSmallScreen":"true",
+          "primaryColor":"#8c7b4c",
+          "textColor":"#e8e3d8",
+          "backgroundColor":"#2b2b2b",
+          "accentColor":"#8c7b4c"
+        },
+        calLink: "retroklimat/sesja-plenerowa",
+      });
+
+      Cal.ns["sesja-plenerowa"]("ui", {
+        "hideEventTypeDetails":false,
+        "layout":"month_view",
+        "theme": {
+          "brandColor":"#8c7b4c",
+          "textColor":"#e8e3d8",
+          "backgroundColor":"#2b2b2b"
+        }
+      });
+      </script>
+    <!-- Cal inline embed code ends -->
   </div>
 </section>
 
