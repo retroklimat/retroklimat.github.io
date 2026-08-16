@@ -928,8 +928,7 @@
   <div class="navbar-links" id="navbarLinks">
     <a href="#o-mnie">O mnie</a>
     <a href="#portfolio">Portfolio</a>
-    <a href="#cennik">Cennik</a>
-    <a href="#rezerwacja">Rezerwacja</a>
+    <a href="#oferta">Oferta</a>
   </div>
   <!-- Hamburger — widoczny tylko na wąskich ekranach (patrz CSS media query) -->
   <button class="navbar-toggle" id="navbarToggle" aria-label="Otwórz menu" aria-expanded="false">
@@ -969,7 +968,7 @@
 
 <footer>
   <h2>Wspomnienia są ulotne- uchywć je na zawsze.</h2>
-  <a href="#rezerwacja" class="contact">Umów sesję</a>
+  <a href="#oferta" class="contact">Zobacz ofertę</a>
 </footer>
 
 <!-- ============================================================
@@ -1009,10 +1008,10 @@
 </section>
 
 <!-- ============================================================
-     SEKCJA "CENNIK"
+     SEKCJA "OFERTA"
      ============================================================ -->
-<section id="cennik" class="pricing-section">
-  <h2>Cennik</h2>
+<section id="oferta" class="pricing-section">
+  <h2>Wybierz usługę</h2>
   <div class="pricing-card">
     <div class="pricing-card-header">
       <h3>Sesja fotograficzna</h3>
@@ -1026,342 +1025,36 @@
     <p class="pricing-note">
       Zgoda na publikację zdjęć w&nbsp;portfolio / social media &mdash; rabat 10%
     </p>
-    <a href="#rezerwacja" class="pricing-cta">Umów termin</a>
+    <button type="button" class="pricing-cta" data-cal-link="retroklimat/sesja-plenerowa" data-cal-namespace="" data-cal-config='{"layout":"month_view"}'>Umów termin</button>
   </div>
+
+  <div class="pricing-card">
+    <div class="pricing-card-header">
+      <h3>Zdjęcie do dokumentu</h3>
+      <p class="pricing-amount">od 40 <span>zł</span></p>
+    </div>
+    <ul class="pricing-features">
+      <li>Wersja cyfrowa 40 zł</li>
+      <li>Wersja cyfrowa + wydruk z dostawą 60 zł</li>
+      <li>Dojazd do 15 km w cenie</li>
+      <li>Czas trwania: 15–30 minut</li>
+    </ul>
+    <button type="button" class="pricing-cta" data-cal-link="retroklimat/zdjecie-do-dokumentu" data-cal-namespace="" data-cal-config='{"layout":"month_view"}'>Umów termin</button>
+  </div>
+
+  <p class="rodo-consent">
+    Wysyłając formularz, zgadzasz się na przetwarzanie Twoich danych
+    (np. imię, e-mail) w celu umówienia i przeprowadzenia sesji.
+    Administratorem danych jestem ja: Rafał Duda, kontakt:
+    <a href="mailto:durafal00@gmail.com">durafal00@gmail.com</a>.
+    Szczegóły znajdziesz w
+    <a href="polityka-prywatnosci.html" target="_blank" rel="noopener">Polityce Prywatności</a>.
+  </p>
 </section>
 
 <!-- ============================================================
-     SEKCJA "REZERWACJA"
+     SEKCJA "REZERWACJA" — usunięta; rezerwacja działa przez popup Cal.com
      ============================================================ -->
-<section id="rezerwacja" class="booking-section">
-  <div class="booking-box">
-    <h2>Umów sesję</h2>
-    <p>Wybierz dogodny termin — potwierdzenie dostaniesz od razu na maila.</p>
-    <!-- Style dla widgetu ZenCal — atrybut data-zencal sprawia,
-         że te reguły są stosowane WEWNĄTRZ embeda (nie działa jak
-         zwykły CSS strony, bo widget renderuje się w swoim kontekście).
-         Wklejone bezpośrednio tutaj, zgodnie z instrukcją ZenCal
-         ("Własny CSS" w ich panelu). -->
-    <style data-zencal>
-      /* ============================================================
-         Widget zbudowany na Material-UI (klasy MuiBox-root,
-         MuiTypography-root, MuiGrid-root...), całość opakowana w
-         #zencal-shadow-container — potwierdzone w DevTools. Dzięki
-         temu możemy celować precyzyjnie, zamiast zgadywać.
-         ============================================================ */
-
-      #zencal-shadow-container {
-        background: #2b2b2b !important;
-        font-family: 'Jost', sans-serif !important;
-      }
-
-      /* CAŁY tekst w widgecie — MUI domyślnie koloruje "drugorzędny"
-         tekst na coś w stylu rgba(0,0,0,0.6) (czarny, półprzezroczysty).
-         Na ciemnym tle wygląda to na ledwo widoczny, "wyblakły" napis —
-         to dokładnie ten efekt, który widziałeś przy "Wybierz daty".
-         !important wygrywa z inline style="color:..." który MUI często
-         dokleja bezpośrednio do elementu. */
-      #zencal-shadow-container .MuiTypography-root {
-        color: #e8e3d8 !important;
-      }
-
-      /* Nagłówki (h2, h3 z klasą MuiTypography-h2 itp.) — grubszy,
-         bardziej wyeksponowany krem, plus nasz serif dla spójności
-         z resztą strony */
-      #zencal-shadow-container .MuiTypography-h1,
-      #zencal-shadow-container .MuiTypography-h2,
-      #zencal-shadow-container .MuiTypography-h3 {
-        font-family: 'Playfair Display', serif !important;
-        color: #e8e3d8 !important;
-      }
-
-      /* Panele/karty (białe tła kontenerów) — MuiBox-root to bardzo
-         ogólna klasa używana wszędzie w MUI, więc tło ustawiamy na
-         transparent (dziedziczy ciemne tło #zencal-shadow-container),
-         a nie na konkretny kolor — inaczej zaczęlibyśmy "zaklejać"
-         również elementy, które mają zostać przezroczyste. */
-      #zencal-shadow-container .MuiBox-root {
-        background-color: transparent;
-      }
-
-      /* Przyciski i klikalne "kafelki" (organizator, wybór daty) —
-         MUI renderuje je zwykle jako MuiButtonBase-root pod spodem */
-      #zencal-shadow-container .MuiButtonBase-root {
-        background-color: #1f1f1f !important;
-        color: #e8e3d8 !important;
-        border-color: #4a4a45 !important;
-      }
-      #zencal-shadow-container .MuiButtonBase-root:hover {
-        background-color: #8c7b4c !important;
-        color: #2b2b2b !important;
-      }
-
-      /* Dni w kalendarzu — jeśli widget używa MUI X Date Pickers,
-         komórki dni mają klasę MuiPickersDay-root, a wybrany/aktywny
-         dzień dostaje dodatkowo klasę Mui-selected */
-      #zencal-shadow-container .MuiPickersDay-root {
-        color: #e8e3d8 !important;
-        border-color: #4a4a45 !important;
-      }
-      #zencal-shadow-container .MuiPickersDay-root.Mui-selected,
-      #zencal-shadow-container .MuiPickersDay-root:hover {
-        background-color: #8c7b4c !important;
-        color: #2b2b2b !important;
-      }
-      #zencal-shadow-container .Mui-disabled {
-        color: #6b6b6b !important;
-        opacity: 0.5 !important;
-      }
-
-      /* Pola formularza (krok "Podsumowanie") */
-      #zencal-shadow-container input,
-      #zencal-shadow-container textarea,
-      #zencal-shadow-container select,
-      #zencal-shadow-container .MuiInputBase-root {
-        background: #1f1f1f !important;
-        color: #e8e3d8 !important;
-        border: 1px solid #4a4a45 !important;
-      }
-
-      /* Placeholder (np. "Zostaw swoją notatkę") — domyślny kolor
-         placeholdera zwykle jest projektowany pod BIAŁE tło (jasny,
-         ale nie za jasny szary). Na naszym ciemnym tle wychodzi to
-         na odwrót: zbyt ciemny/nieczytelny. Niektóre przeglądarki
-         dodatkowo zmniejszają opacity placeholdera domyślnie, więc
-         wymuszamy je na 1, żeby kolor niżej faktycznie się pokazał. */
-      #zencal-shadow-container input::placeholder,
-      #zencal-shadow-container textarea::placeholder {
-        color: #8c8c8c !important;
-        opacity: 1 !important;
-      }
-
-      /* Chip z wybranym terminem (np. "17.07, 21:00" z ikonką X) —
-         to osobny mały komponent z WŁASNYM, wpisanym na sztywno jasnym
-         tłem (typowy domyślny styl "Chip"), niezależnym od reguł dla
-         .MuiBox-root wyżej. Nasz jasny kolor tekstu wylądował na tym
-         jasnym tle — stąd zlewanie się. Używamy :has() (wspierane we
-         wszystkich aktualnych przeglądarkach), żeby złapać dowolny Box
-         zawierający span + ikonkę SVG (typowy wzorzec "chip z usuwaniem"),
-         bez polegania na losowej, mogącej się zmienić nazwie klasy. */
-      #zencal-shadow-container .MuiBox-root:has(> .MuiTypography-root):has(svg) {
-        background-color: #1f1f1f !important;
-        border: 1px solid #4a4a45 !important;
-        border-radius: 4px;
-      }
-
-      /* Główny przycisk akcji (np. "Podsumowanie") */
-      #zencal-shadow-container button {
-        font-family: 'Jost', sans-serif !important;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
-
-      /* Stałe, "ludzkie" nazwy klas znalezione w Twoim DevTools —
-         w przeciwieństwie do losowych hashy MUI (typu zencal-12f2zjk),
-         te są nadawane bezpośrednio przez ZenCal i powinny być stabilne:
-         - .zencal-embed-booking-view-calendar-date-button → komórka dnia
-         - .zencal-embed-booking-view-hour-list-item → wiersz godziny
-         Dodatkowo [id^="zencal-embed-"] łapie WSZYSTKIE kontenery
-         ZenCal-a naraz (np. zencal-embed-schedule-view-calendar-people-
-         -container, gdzie siedział biały pasek z "Rafał") — to
-         rozwiązuje przypadki, gdy nasze wcześniejsze .MuiBox-root
-         { background: transparent } nie wystarczało, bo białe tło
-         siedziało wyżej, na samym kontenerze, a nie na MuiBox w środku. */
-      [id^="zencal-embed-"] {
-        background-color: transparent !important;
-      }
-
-      /* Domyślnie: dzień DOSTĘPNY do wyboru — wyraźny "kafelek"
-         z obwódką, tak jak w oryginalnym (białym) wyglądzie widgetu */
-      .zencal-embed-booking-view-calendar-date-button {
-        background-color: #1f1f1f !important;
-        color: #e8e3d8 !important;
-        border: 1px solid #4a4a45 !important;
-      }
-      .zencal-embed-booking-view-calendar-date-button:hover {
-        background-color: #8c7b4c !important;
-        color: #2b2b2b !important;
-      }
-
-      /* Dzień NIEDOSTĘPNY — POTWIERDZONE w Twoim DevTools: ZenCal
-         dokleja dodatkowe klasy w tej samej konwencji co bazowa
-         (sufiks -past dla dni przeszłych, -empty dla dni bez wolnych
-         terminów) — NIE Mui-disabled/aria-disabled, jak wcześniej
-         zgadywałem. Zostawiam też stare warianty jako nieszkodliwy
-         zapas na wypadek, gdyby widget używał ich gdzie indziej. */
-      .zencal-embed-booking-view-calendar-date-button-past,
-      .zencal-embed-booking-view-calendar-date-button-empty,
-      .zencal-embed-booking-view-calendar-date-button[disabled],
-      .zencal-embed-booking-view-calendar-date-button.Mui-disabled,
-      .zencal-embed-booking-view-calendar-date-button[aria-disabled="true"] {
-        background-color: transparent !important;
-        border-color: transparent !important;
-        color: #6b6b6b !important;
-        opacity: 0.5 !important;
-        cursor: not-allowed !important;
-      }
-      .zencal-embed-booking-view-calendar-date-button-past:hover,
-      .zencal-embed-booking-view-calendar-date-button-empty:hover,
-      .zencal-embed-booking-view-calendar-date-button[disabled]:hover,
-      .zencal-embed-booking-view-calendar-date-button.Mui-disabled:hover,
-      .zencal-embed-booking-view-calendar-date-button[aria-disabled="true"]:hover {
-        background-color: transparent !important;
-        color: #6b6b6b !important;
-      }
-
-      /* Dzień WYBRANY (kliknięty/zaznaczony) — trwałe wyróżnienie
-         kolorem akcentu, nie tylko na hover. To NADAL zgadywane nazwy
-         klas (nie widzieliśmy jeszcze zaznaczonego dnia w DevTools) —
-         jeśli po kliknięciu daty nie widać wyraźnego wyróżnienia,
-         zbadaj wybrany dzień i podeślij mi jego klasę, tak jak zrobiłeś
-         teraz z -past/-empty. */
-      .zencal-embed-booking-view-calendar-date-button-selected,
-      .zencal-embed-booking-view-calendar-date-button.Mui-selected,
-      .zencal-embed-booking-view-calendar-date-button[aria-selected="true"] {
-        background-color: #8c7b4c !important;
-        border-color: #8c7b4c !important;
-        color: #2b2b2b !important;
-        font-weight: 600;
-      }
-
-      /* Pole numeru telefonu — chipsik z kodem kraju ("PL +48") ma
-         własne, wewnętrzne białe tło (widoczne w Twoim DevTools jako
-         inline style na <input>), które nasze wcześniejsze ogólne
-         reguły (.MuiBox-root, input) nie w pełni złapały. Mamy
-         stabilne ID kontenera tego konkretnego pola, więc łapiemy
-         WSZYSTKO w jego wnętrzu jedną, mocną regułą — bezpieczne,
-         bo dotyczy tylko tego jednego pola, nie całego widgetu. */
-      #zencal-embed-booking-form-view-your-details-phone-container,
-      #zencal-embed-booking-form-view-your-details-phone-container * {
-        background-color: #1f1f1f !important;
-        color: #e8e3d8 !important;
-        border-color: #4a4a45 !important;
-      }
-
-      .zencal-embed-booking-view-hour-list-item {
-        background-color: #1f1f1f !important;
-        color: #e8e3d8 !important;
-        border: 1px solid #4a4a45 !important;
-      }
-      .zencal-embed-booking-view-hour-list-item:hover {
-        background-color: #8c7b4c !important;
-        color: #2b2b2b !important;
-      }
-
-      /* Strzałki nawigacji miesiąca/godzin — zwykle ikony SVG
-         kolorowane przez currentColor, więc wystarczy ustawić color
-         na rodzicu-przycisku */
-      #zencal-shadow-container .MuiIconButton-root {
-        color: #8c7b4c !important;
-      }
-
-      /* UWAGA: klasy MuiPickersDay-root i MuiInputBase-root (użyte
-         wyżej) to standardowe nazwy z biblioteki MUI X Date Pickers —
-         prawdopodobne, ale nie 100% potwierdzone w Twoim DevTools.
-         Jeśli któryś fragment nadal zostanie w złym kolorze —
-         zrób dokładnie to, co poprzednio: prawym → Zbadaj → sprawdź
-         klasę w zakładce Elements → dopisz dla niej regułę tutaj,
-         w formacie:
-           .DokladnaKlasaZInspektora {
-             color: #e8e3d8 !important;
-           }
-      */
-    </style>
-
-    <p class="rodo-consent">
-      Wysyłając formularz, zgadzasz się na przetwarzanie Twoich danych
-      (np. imię, e-mail) w celu umówienia i przeprowadzenia sesji.
-      Administratorem danych jestem ja: Rafał Duda, kontakt:
-      <a href="mailto:durafal00@gmail.com">durafal00@gmail.com</a>.
-      Szczegóły znajdziesz w
-      <a href="polityka-prywatnosci.html" target="_blank" rel="noopener">Polityce Prywatności</a>.
-    </p>
-
-    <!-- Cal inline embed code begins -->
-    <style>
-      #my-cal-inline-sesja-plenerowa {
-        width: 100%;
-        min-height: 760px;
-        max-width: 100%;
-        box-sizing: border-box;
-        overflow: visible;
-        background: #2b2b2b;
-        color: #e8e3d8;
-        border: 2px solid #8c7b4c;
-        border-radius: 28px;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, .16);
-        padding: 1rem;
-      }
-      #my-cal-inline-sesja-plenerowa > * {
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
-        box-sizing: border-box !important;
-      }
-      #my-cal-inline-sesja-plenerowa iframe,
-      #my-cal-inline-sesja-plenerowa .cal-inline-embed,
-      #my-cal-inline-sesja-plenerowa .cal-embed {
-        width: 100% !important;
-        min-width: 0 !important;
-        height: auto !important;
-      }
-      @media (max-width: 900px) {
-        #my-cal-inline-sesja-plenerowa {
-          min-height: 900px;
-          padding: 0.8rem;
-          border-radius: 24px;
-        }
-      }
-      @media (max-width: 640px) {
-        #my-cal-inline-sesja-plenerowa {
-          min-height: 980px;
-          padding: 0.6rem;
-          border-radius: 18px;
-          border: none;
-          box-shadow: none;
-          background: transparent;
-        }
-      }
-    </style>
-    <div id="my-cal-inline-sesja-plenerowa"></div>
-    <script type="text/javascript">
-      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-      Cal("init", "sesja-plenerowa", {origin:"https://app.cal.com"});
-      Cal.config = Cal.config || {};
-      Cal.config.forwardQueryParams = true;
-
-      Cal.ns["sesja-plenerowa"]("inline", {
-        elementOrSelector:"#my-cal-inline-sesja-plenerowa",
-        config: {
-          "layout":"month_view",
-          "useSlotsViewOnSmallScreen":"true",
-          "primaryColor":"#8c7b4c",
-          "textColor":"#e8e3d8",
-          "backgroundColor":"#2b2b2b",
-          "accentColor":"#8c7b4c",
-          "contentPadding":"0",
-          "containerPadding":"0",
-          "maxWidth":"100%",
-          "minWidth":"0",
-          "responsive": true
-        },
-        calLink: "retroklimat/sesja-plenerowa",
-      });
-
-      Cal.ns["sesja-plenerowa"]("ui", {
-        "hideEventTypeDetails":false,
-        "layout":"month_view",
-        "theme": {
-          "brandColor":"#8c7b4c",
-          "textColor":"#e8e3d8",
-          "backgroundColor":"#2b2b2b"
-        },
-        "responsive": true
-      });
-      </script>
-    <!-- Cal inline embed code ends -->
-  </div>
-</section>
 
 <!-- ============================================================
      LIGHTBOX — pusty kontener, JS wypełnia go obrazkiem po kliknięciu
@@ -1409,6 +1102,12 @@
   </div>
   <a href="polityka-prywatnosci.html" class="footer-legal-link">Polityka prywatności</a>
 </footer>
+
+<!-- ============================================================
+     Cal popup script placeholder
+     Wklej tutaj bazowy skrypt JavaScript Cal.com, który obsługuje
+     popupy wywoływane przez atrybuty data-cal-link...
+     ============================================================ -->
 
 <!-- GSAP + ScrollTrigger z CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -1892,5 +1591,54 @@
     })();
   </script>
 
+
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        d.head.appendChild(d.createElement('script')).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === 'string') {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ['initNamespace', namespace]);
+        } else {
+          p(cal, ar);
+        }
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, 'https://app.cal.com/embed/embed.js', 'init');
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-cal-link]').forEach(function (button) {
+      button.addEventListener('click', function (event) {
+        event.preventDefault();
+        const link = button.getAttribute('data-cal-link');
+        const config = button.getAttribute('data-cal-config') || '{"layout":"month_view"}';
+        if (window.Cal) {
+          Cal('popup', {
+            calLink: link,
+            config: JSON.parse(config)
+          });
+        }
+      });
+    });
+  });
+</script>
 </body>
 </html>
